@@ -1,36 +1,33 @@
 <script setup>
 import { useTodoStore } from "../store/todoStore"
 import TodoItem from "./TodoItem.vue"
+import TodoFilters from "./TodoFilters.vue"
+import BaseProgressBar from "./base/BaseProgressBar.vue"
 
 const todoStore = useTodoStore()
-
-const completedCount = () => {
-  return todoStore.todos.filter(todo => todo.done).length
-}
 </script>
 
 <template>
-  <div class="space-y-4">
-    <!-- Stats Bar -->
-    <div
-      v-if="todoStore.todos.length > 0"
-      class="flex justify-between items-center text-sm text-slate-600 px-1"
-    >
-      <span>{{ todoStore.todos.length }} task{{ todoStore.todos.length !== 1 ? 's' : '' }}</span>
-      <span class="text-green-600 font-medium">
-        {{ completedCount() }} completed
-      </span>
-    </div>
+  <div class="space-y-6">
+    <!-- Progress Bar Section -->
+    <BaseProgressBar 
+      v-if="todoStore.totalCount > 0"
+      :progress="todoStore.progress"
+      label="Completion Progress"
+    />
+
+    <!-- Stats & Filters Bar -->
+    <TodoFilters />
 
     <!-- Todo Items List -->
     <transition-group
-      v-if="todoStore.todos.length > 0"
+      v-if="todoStore.filteredTodos.length > 0"
       name="list"
       tag="div"
       class="space-y-3"
     >
       <TodoItem
-        v-for="todo in todoStore.todos"
+        v-for="todo in todoStore.filteredTodos"
         :key="todo.id"
         :todo="todo"
       />

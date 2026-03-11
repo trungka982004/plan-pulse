@@ -3,6 +3,7 @@ import TodoInput from "../components/TodoInput.vue"
 import TodoList from "../components/TodoList.vue"
 import TheHeader from "../components/layouts/TheHeader.vue"
 import TheFooter from "../components/layouts/TheFooter.vue"
+import BaseCard from "../components/base/BaseCard.vue"
 </script>
 
 <template>
@@ -12,20 +13,20 @@ import TheFooter from "../components/layouts/TheFooter.vue"
       <TheHeader class="justify-center align-center"/>
 
       <!-- Main Card -->
-      <div class="card p-6 space-y-6">
+      <BaseCard class="todo-card">
         <!-- Input Section -->
-        <section>
+        <section class="mb-6">
           <TodoInput />
         </section>
 
         <!-- Divider -->
-        <div class="border-t border-slate-200"></div>
+        <div class="border-t border-slate-200 mb-6"></div>
 
         <!-- List Section -->
         <section>
           <TodoList />
         </section>
-      </div>
+      </BaseCard>
 
       <!-- Footer -->
       <TheFooter />
@@ -36,7 +37,7 @@ import TheFooter from "../components/layouts/TheFooter.vue"
 
 <style scoped>
 /* Fade in animation on mount */
-:deep(.card) {
+:deep(.todo-card) {
   animation: slideUp 0.5s ease-out;
 }
 

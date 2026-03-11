@@ -15,7 +15,7 @@ const props = defineProps({
 const variantClasses = {
     primary: 'bg-sky-600 text-white hover:bg-sky-700 focus:ring-sky-500',
     danger: 'bg-red-500 text-white hover:bg-red-600 focus:ring-red-500',
-    ghost: 'text-slate-500 hover:bg-slate-100 focus:ring-slate-400'
+    modify: 'bg-yellow-500 text-white hover:bg-yellow-600 focus:ring-yellow-500'
 }
 </script>
 
