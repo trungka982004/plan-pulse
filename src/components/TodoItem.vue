@@ -1,37 +1,24 @@
 <script setup>
-import './TodoItem.css'
+import { useTodoStore } from "../store/todoStore"
 
 const props = defineProps({
   todo: Object
 })
 
-const emit = defineEmits(['delete','toggle'])
+const todoStore = useTodoStore()
 </script>
 
 <template>
-  <li class="todo-item" :class="{ 'todo-done': todo.done }">
-    <div class="todo-content">
-      <input
-        type="checkbox"
-        :checked="todo.done"
-        @change="emit('toggle', todo.id)"
-        class="checkbox"
-      />
-      <span 
-        class="todo-text"
-        @click="emit('toggle', todo.id)"
-      >
-        {{ todo.text }}
-      </span>
-    </div>
-
-    <button 
-      @click="emit('delete', todo.id)"
-      class="delete-btn"
-      title="Delete this todo"
+  <div>
+    <span
+      :style="{ textDecoration: todo.done ? 'line-through' : 'none' }"
+      @click="todoStore.toggleTodo(todo.id)"
     >
-      🗑️
-    </button>
-  </li>
-</template>
+      {{ todo.text }}
+    </span>
 
+    <button @click="todoStore.removeTodo(todo.id)">
+      Delete
+    </button>
+  </div>
+</template>
