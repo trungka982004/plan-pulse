@@ -1,9 +1,10 @@
 import { defineStore } from "pinia"
-import { ref,computed  } from 'vue'
+import { ref,computed, watch  } from 'vue'
 
 export const useTodoStore = defineStore("todo", () => {
   // State
-  const todos = ref([])
+  const storedTodos = localStorage.getItem('my-todo-list')
+  const todos = ref(storedTodos ? JSON.parse(storedTodos) : [])
   const filter = ref('all')
 
   //Getters
@@ -56,6 +57,11 @@ export const useTodoStore = defineStore("todo", () => {
     filter.value = newFilter
   }
 
+  //Watch
+  watch(todos, (newTodos) => {
+    localStorage.setItem('my-todo-list', JSON.stringify(newTodos))
+  }, { deep: true })
+  
   // Return component in reuse 
   return {
     //states
