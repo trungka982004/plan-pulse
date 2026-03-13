@@ -1,12 +1,15 @@
 <script setup>
+import { storeToRefs } from "pinia"
 import { useTodoStore } from "../store/todoStore"
 
 const todoStore = useTodoStore()
+const { filter, completedCount, totalCount } = storeToRefs(todoStore)
+const { setFilter, clearAll } = todoStore
 </script>
 
 <template>
   <div
-    v-if="todoStore.totalCount > 0"
+    v-if="totalCount > 0"
     class="flex flex-col sm:flex-row justify-between items-center bg-slate-50 p-2 rounded-lg gap-4 border border-slate-100"
   >
     <!-- Filter Buttons -->
@@ -14,10 +17,10 @@ const todoStore = useTodoStore()
       <button 
         v-for="f in ['all', 'active', 'completed']"
         :key="f"
-        @click="todoStore.setFilter(f)"
+        @click="setFilter(f)"
         class="px-3 py-1 text-xs font-medium rounded transition-all capitalize"
         :class="[
-          todoStore.filter === f 
+          filter === f 
             ? 'bg-sky-500 text-white shadow-sm' 
             : 'text-slate-600 hover:text-sky-600'
         ]"
@@ -29,12 +32,12 @@ const todoStore = useTodoStore()
     <!-- Action & Info -->
     <div class="flex items-center gap-4 text-sm">
       <span class="text-slate-500 font-medium">
-        {{ todoStore.completedCount }}/{{ todoStore.totalCount }} completed
+        {{ completedCount }}/{{ totalCount }} completed
       </span>
       
       <button 
-        v-if="todoStore.totalCount > 0"
-        @click="todoStore.clearAll"
+        v-if="totalCount > 0"
+        @click="clearAll"
         class="text-xs text-rose-500 hover:text-rose-600 font-semibold transition-colors flex items-center gap-1"
       >
         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">

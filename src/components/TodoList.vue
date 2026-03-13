@@ -1,18 +1,21 @@
 <script setup>
+import { storeToRefs } from "pinia"
 import { useTodoStore } from "../store/todoStore"
 import TodoItem from "./TodoItem.vue"
 import TodoFilters from "./TodoFilters.vue"
 import BaseProgressBar from "./base/BaseProgressBar.vue"
 
 const todoStore = useTodoStore()
+
+const { filteredTodos, totalCount, progress } = storeToRefs(todoStore)
 </script>
 
 <template>
   <div class="space-y-6">
     <!-- Progress Bar Section -->
     <BaseProgressBar 
-      v-if="todoStore.totalCount > 0"
-      :progress="todoStore.progress"
+      v-if="totalCount > 0"
+      :progress="progress"
       label="Completion Progress"
     />
 
@@ -21,13 +24,13 @@ const todoStore = useTodoStore()
 
     <!-- Todo Items List -->
     <transition-group
-      v-if="todoStore.filteredTodos.length > 0"
+      v-if="filteredTodos.length > 0"
       name="list"
       tag="div"
       class="space-y-3"
     >
       <TodoItem
-        v-for="todo in todoStore.filteredTodos"
+        v-for="todo in filteredTodos"
         :key="todo.id"
         :todo="todo"
       />
