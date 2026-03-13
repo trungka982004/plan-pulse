@@ -4,17 +4,13 @@ import { useTodoStore } from "../store/todoStore"
 import BaseButton from "./base/BaseButton.vue"
 
 const todoStore = useTodoStore()
+const { addTodo } = todoStore
 const text = ref("")
-
-const addTodo = () => {
-  if (!text.value.trim()) return
-  todoStore.addTodo(text.value)
-  text.value = ""
-}
 
 const handleKeyDown = (e) => {
   if (e.key === "Enter") {
-    addTodo()
+    addTodo(text.value)
+    text.value = ""
   }
 }
 </script>
@@ -31,7 +27,7 @@ const handleKeyDown = (e) => {
       />
       <BaseButton 
         variant="primary"
-        @click="addTodo"
+        @click="addTodo(text)"
         class="px-6 whitespace-nowrap hover:shadow-lg"
       >
         Add Task

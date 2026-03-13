@@ -20,6 +20,7 @@ const props = defineProps({
 })
 
 const todoStore = useTodoStore()
+const { toggleTodo, editTodo, removeTodo } = todoStore
 
 // State for editing
 const isEditing = ref(false)
@@ -36,7 +37,7 @@ const startEdit = async () => {
 
 const saveEdit = () => {
   if (editText.value.trim()) {
-    todoStore.editTodo(props.todo.id, editText.value)
+    editTodo(props.todo.id, editText.value)
     isEditing.value = false
   } else {
     cancelEdit()
@@ -55,7 +56,7 @@ const cancelEdit = () => {
     <BaseCheckBox 
       v-if="!isEditing"
       :checked="todo.done"
-      @toggle="todoStore.toggleTodo(todo.id)"
+      @toggle="toggleTodo(todo.id)"
     />
 
     <!-- Todo Text / Edit Input -->
@@ -99,7 +100,7 @@ const cancelEdit = () => {
         
         <BaseButton 
           variant="danger" 
-          @click="todoStore.removeTodo(todo.id)" 
+          @click="removeTodo(todo.id)" 
           class="todo-action-button"
           title="Delete"
         >
