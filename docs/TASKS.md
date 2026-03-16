@@ -8,10 +8,10 @@ Danh sách này chia nhỏ lộ trình từ file `ROADMAP.md` và quá trình ph
 
 ## Phase 0: Tái cấu trúc & Nền tảng (Refactoring)
 Bắt đầu bằng việc dọn dẹp và tổ chức lại dự án Todo hiện tại.
-- [ ] **Task 0.1:** Tổ chức lại cấu trúc thư mục chuẩn (tạo `services/`, `composables/`, `utils/`, đổi `store` -> `stores`).
-- [ ] **Task 0.2:** Tái cấu trúc các component Todo (đổi tên và tách thành `Goal base` & `Habit base`).
-- [ ] **Task 0.3:** Xây dựng Layout hệ thống mới (Sidebar/Navbar cơ bản cho việc điều hướng).
-- [ ] **Task 0.4:** Thiết lập Service Layer (Mock API bằng LocalStorage) để mô phỏng backend.
+- [x] **Task 0.1:** Tổ chức lại cấu trúc thư mục chuẩn (tạo `services/`, `composables/`, `utils/`, đổi `store` -> `stores`).
+- [x] **Task 0.2:** Tái cấu trúc các component Todo (đổi tên và tách thành `Goal base` & `Habit base`).
+- [x] **Task 0.3:** Xây dựng Layout hệ thống mới (Sidebar/Navbar cơ bản cho việc điều hướng).
+- [x] **Task 0.4:** Thiết lập Service Layer (Mock API bằng LocalStorage) để mô phỏng backend.
 
 ---
 
