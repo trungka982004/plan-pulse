@@ -1,10 +1,10 @@
 <script setup>
 import { storeToRefs } from "pinia"
-import { useTodoStore } from "../store/todoStore"
+import { useHabitStore } from "../../stores/habitStore"
 
-const todoStore = useTodoStore()
-const { filter, completedCount, totalCount } = storeToRefs(todoStore)
-const { setFilter, clearAll } = todoStore
+const habitStore = useHabitStore()
+const { filter, completedCount, totalCount } = storeToRefs(habitStore)
+const { setFilter, clearAll } = habitStore
 </script>
 
 <template>
@@ -21,8 +21,8 @@ const { setFilter, clearAll } = todoStore
         class="px-3 py-1 text-xs font-medium rounded transition-all capitalize"
         :class="[
           filter === f 
-            ? 'bg-sky-500 text-white shadow-sm' 
-            : 'text-slate-600 hover:text-sky-600'
+            ? 'bg-amber-500 text-white shadow-sm'
+            : 'text-slate-600 hover:text-amber-600'
         ]"
       >
         {{ f === 'all' ? 'All' : f === 'active' ? 'Active' : 'Completed' }}

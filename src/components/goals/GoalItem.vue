@@ -1,11 +1,11 @@
 <script setup>
 import { ref, nextTick } from "vue"
-import { useTodoStore } from "../store/todoStore"
-import BaseButton from "./base/BaseButton.vue"
-import BaseCheckBox from "./base/BaseCheckBox.vue"
+import { useGoalStore } from "../../stores/goalStore"
+import BaseButton from "../base/BaseButton.vue"
+import BaseCheckBox from "../base/BaseCheckBox.vue"
 
 const props = defineProps({
-  todo: {
+  goal: {
     type: Object,
     required: true,
     default: () => ({
@@ -19,16 +19,16 @@ const props = defineProps({
   }
 })
 
-const todoStore = useTodoStore()
-const { toggleTodo, editTodo, removeTodo } = todoStore
+const goalStore = useGoalStore()
+const { toggleGoal, editGoal, removeGoal } = goalStore
 
 // State for editing
 const isEditing = ref(false)
-const editText = ref(props.todo.text)
+const editText = ref(props.goal.text)
 const inputRef = ref(null)
 
 const startEdit = async () => {
-  editText.value = props.todo.text
+  editText.value = props.goal.text
   isEditing.value = true
   // Focus input after DOM updates
   await nextTick()
@@ -37,7 +37,7 @@ const startEdit = async () => {
 
 const saveEdit = () => {
   if (editText.value.trim()) {
-    editTodo(props.todo.id, editText.value)
+    editGoal(props.goal.id, editText.value)
     isEditing.value = false
   } else {
     cancelEdit()
@@ -45,18 +45,18 @@ const saveEdit = () => {
 }
 
 const cancelEdit = () => {
-  editText.value = props.todo.text
+  editText.value = props.goal.text
   isEditing.value = false
 }
 </script>
 
 <template>
-  <div class="todo-item group">
+  <div class="goal-item group">
     <!-- Checkbox (Hidden while editing) -->
     <BaseCheckBox 
       v-if="!isEditing"
-      :checked="todo.done"
-      @toggle="toggleTodo(todo.id)"
+      :checked="goal.done"
+      @toggle="toggleGoal(goal.id)"
     />
 
     <!-- Todo Text / Edit Input -->
@@ -68,18 +68,18 @@ const cancelEdit = () => {
         @keyup.enter="saveEdit"
         @keyup.esc="cancelEdit"
         @blur="saveEdit"
-        class="todo-input"
+        class="goal-input"
       />
       <span
         v-else
-        class="todo-text"
+        class="goal-text"
         :class="[
-          todo.done
+          goal.done
             ? 'line-through text-slate-400'
             : 'text-slate-900 font-medium'
-        ]"
+        ]"  
       >
-        {{ todo.text }}
+        {{ goal.text }}
       </span>
     </div>
 
@@ -90,21 +90,21 @@ const cancelEdit = () => {
         <BaseButton 
           variant="modify" 
           @click="startEdit" 
-          class="todo-action-button"
+          class="goal-action-button"
           title="Edit"
         >
-          <svg class="todo-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <svg class="goal-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"/>
           </svg>
         </BaseButton>
         
         <BaseButton 
           variant="danger" 
-          @click="removeTodo(todo.id)" 
-          class="todo-action-button"
+          @click="removeGoal(goal.id)" 
+          class="goal-action-button"
           title="Delete"
         >
-          <svg class="todo-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <svg class="goal-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
           </svg>
         </BaseButton>
@@ -115,10 +115,10 @@ const cancelEdit = () => {
         <BaseButton 
           variant="primary" 
           @click="saveEdit" 
-          class="todo-action-button"
+          class="goal-action-button"
           title="Save"
         >
-          <svg class="todo-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <svg class="goal-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
           </svg>
         </BaseButton>
@@ -126,10 +126,10 @@ const cancelEdit = () => {
         <BaseButton 
           variant="danger" 
           @click="cancelEdit" 
-          class="todo-action-button"
+          class="goal-action-button"
           title="Cancel"
         >
-          <svg class="todo-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <svg class="goal-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
           </svg>
         </BaseButton>
@@ -139,25 +139,25 @@ const cancelEdit = () => {
 </template>
 
 <style scoped>
-@reference "../assets/main.css";
+@reference "../../assets/main.css";
 
-.todo-item {
+.goal-item {
   @apply flex items-center gap-3 p-4 rounded-lg bg-white border border-slate-200 hover:border-sky-400 hover:shadow-md transition-all duration-200;
 }
 
-.todo-input {
+.goal-input {
   @apply w-full bg-slate-50 border-b-2 border-sky-500 outline-none px-2 py-1 text-sm font-medium text-slate-900;
 }
 
-.todo-text {
+.goal-text {
   @apply block text-sm transition-all duration-200;
 }
 
-.todo-action-button {
+.goal-action-button {
   @apply p-2 opacity-0 group-hover:opacity-100 transition-opacity;
 }
 
-.todo-icon {
+.goal-icon {
   @apply w-5 h-5;
 }
 </style>

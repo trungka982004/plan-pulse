@@ -1,15 +1,15 @@
 <script setup>
 import { ref } from "vue"
-import { useTodoStore } from "../store/todoStore"
-import BaseButton from "./base/BaseButton.vue"
+import { useGoalStore } from "../../stores/goalStore"
+import BaseButton from "../base/BaseButton.vue"
 
-const todoStore = useTodoStore()
-const { addTodo } = todoStore
+const goalStore = useGoalStore()
+const { addGoal } = goalStore
 const text = ref("")
 
 const handleKeyDown = (e) => {
   if (e.key === "Enter") {
-    addTodo(text.value)
+    addGoal(text.value)
     text.value = ""
   }
 }
@@ -27,25 +27,19 @@ const handleKeyDown = (e) => {
       />
       <BaseButton 
         variant="primary"
-        @click="addTodo(text)"
+        @click="addGoal(text)"
         class="px-6 whitespace-nowrap hover:shadow-lg"
       >
         Add Task
-        <svg class="todo-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
-        </svg>
       </BaseButton>
     </div>
-    <p class="text-xs text-slate-500 mt-2">
-      Press Enter or click Add Task to create a new todo
-    </p>
   </div>
 </template>
 
 <style scoped>
-@reference "../assets/main.css";
+@reference "../../assets/main.css";
 
-.todo-icon {
-  @apply w-5 h-5;
+.input-field {
+  @apply bg-white border border-slate-200 rounded-lg px-4 py-3 outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all shadow-sm;
 }
 </style>

@@ -1,16 +1,13 @@
 <script setup>
-import { useSettingStore } from '@/store/settingStore'
-import TheHeader from "../components/layouts/TheHeader.vue"
-import TheFooter from "../components/layouts/TheFooter.vue"
+import { useSettingStore } from '@/stores/settingStore'
 import BaseCard from "../components/base/BaseCard.vue"
 
 const store = useSettingStore()
 </script>
 
 <template>
-  <div class="min-h-screen bg-slate-50 dark:bg-slate-900 py-8 px-4 transition-colors duration-300">
+  <div class="py-8 px-4 transition-colors duration-300">
     <div class="max-w-2xl mx-auto">
-      <TheHeader />
       <BaseCard>
         <div class="space-y-8">
           <!-- Section Profile -->
@@ -56,7 +53,6 @@ const store = useSettingStore()
           </section>
         </div>
       </BaseCard>
-      <TheFooter />
     </div>
   </div>
 </template>
