@@ -24,6 +24,7 @@ const { toggleGoal, editGoal, removeGoal } = goalStore
 
 // State for editing
 const isEditing = ref(false)
+const isSaving = ref(false)
 const editText = ref(props.goal.text)
 const inputRef = ref(null)
 
@@ -36,12 +37,17 @@ const startEdit = async () => {
 }
 
 const saveEdit = () => {
-  if (editText.value.trim()) {
+  // Lock to prevent duplicate calls from blur + enter
+  if (isSaving.value) return; 
+  isSaving.value = true;
+  
+  if (editText.value.trim() && editText.value !== props.goal.text) {
     editGoal(props.goal.id, editText.value)
-    isEditing.value = false
-  } else {
-    cancelEdit()
   }
+  isEditing.value = false;
+  
+  // Unlock after short delay
+  setTimeout(() => isSaving.value = false, 100);
 }
 
 const cancelEdit = () => {
@@ -69,10 +75,12 @@ const cancelEdit = () => {
         @keyup.esc="cancelEdit"
         @blur="saveEdit"
         class="goal-input"
+        :style="{ width: `${Math.max(editText.length + 1, 5)}ch`, maxWidth: '100%' }"
       />
       <span
         v-else
-        class="goal-text"
+        @dblclick="startEdit"
+        class="goal-text cursor-pointer"
         :class="[
           goal.done
             ? 'line-through text-slate-400'
@@ -146,7 +154,7 @@ const cancelEdit = () => {
 }
 
 .goal-input {
-  @apply w-full bg-slate-50 border-b-2 border-sky-500 outline-none px-2 py-1 text-sm font-medium text-slate-900;
+  @apply bg-slate-50 border-b-2 border-sky-500 outline-none px-2 py-1 text-sm font-medium text-slate-900 transition-all duration-200;
 }
 
 .goal-text {
