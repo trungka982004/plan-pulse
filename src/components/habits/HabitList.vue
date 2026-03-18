@@ -5,13 +5,26 @@ import habitItem from "./HabitItem.vue"
 import habitFilters from "./HabitFilters.vue"
 import BaseProgressBar from "../base/BaseProgressBar.vue"
 
-const habitStore = useHabitStore()
-const { filteredHabits, totalCount, progress } = storeToRefs(habitStore)
-
 const props = defineProps({
   limit: {
     type: Number,
     default: 0
+  }
+})
+
+import draggable from "vuedraggable"
+import { computed } from "vue"
+
+const habitStore = useHabitStore()
+const { filteredHabits, totalCount, progress, filter } = storeToRefs(habitStore)
+
+const draggableHabits = computed({
+  get: () => props.limit ? filteredHabits.value.slice(0, props.limit) : filteredHabits.value,
+  set: (val) => {
+    // Only allow drag update if we are not limited and viewing 'all'
+    if (!props.limit && filter.value === 'all') {
+      habitStore.updateHabitsOrder(val)
+    }
   }
 })
 </script>
@@ -26,25 +39,29 @@ const props = defineProps({
     />
     <habitFilters v-if="!limit" />
     <!-- habit Items List -->
-    <transition-group
-      v-if="filteredHabits.length > 0"
-      name="list"
-      tag="div"
+    <draggable
+      v-if="draggableHabits.length > 0"
+      v-model="draggableHabits"
+      item-key="id"
       class="space-y-3"
+      handle=".drag-handle"
+      ghost-class="opacity-50"
+      animation="200"
     >
-      <habitItem
-        v-for="habit in (limit ? filteredHabits.slice(0, limit) : filteredHabits)"
-        :key="habit.id"
-        :habit="habit"
-      />
-    </transition-group>
+      <template #item="{element}">
+        <habitItem
+          :key="element.id"
+          :habit="element"
+        />
+      </template>
+    </draggable>
 
     <!-- Empty State -->
     <div 
       v-else 
-      class="text-center py-12 bg-slate-50 rounded-xl border-2 border-dashed border-slate-200"
+      class="text-center py-12 bg-slate-50 dark:bg-slate-800/50 rounded-xl border-2 border-dashed border-slate-200 dark:border-slate-700 transition-colors duration-200"
     >
-      <p class="text-slate-500 font-medium">No habits found. Start by adding one above!</p>
+      <p class="text-slate-500 dark:text-slate-400 font-medium">No habits found. Start by adding one above!</p>
     </div>
   </div>
 </template>

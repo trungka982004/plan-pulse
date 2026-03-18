@@ -1,12 +1,12 @@
 <template>
-  <div class="bg-white rounded-2xl shadow-xl shadow-slate-200/50 border border-slate-100 overflow-hidden">
-    <div v-if="$slots.header" class="px-6 py-4 border-b border-slate-50">
+  <div class="bg-white dark:bg-slate-800 rounded-2xl shadow-xl shadow-slate-200/50 dark:shadow-none border border-slate-100 dark:border-slate-700 overflow-hidden transition-colors duration-200">
+    <div v-if="$slots.header" class="px-6 py-4 border-b border-slate-50 dark:border-slate-700">
       <slot name="header" />
     </div>
     <div class="p-6">
       <slot />
     </div>
-    <div v-if="$slots.footer" class="px-6 py-4 bg-slate-50/50 border-t border-slate-50">
+    <div v-if="$slots.footer" class="px-6 py-4 bg-slate-50/50 dark:bg-slate-800/50 border-t border-slate-50 dark:border-slate-700">
       <slot name="footer" />
     </div>
   </div>

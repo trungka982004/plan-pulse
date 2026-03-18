@@ -9,8 +9,49 @@ export const useHabitStore = defineStore("habit", () => {
 
   const loadHabits = () => {
     const data = storageService.getHabits();
+    data.forEach(h => updateStreak(h));
     // Empty old elements and spread new data to maintain Proxy reactivity
     habits.value.splice(0, habits.value.length, ...data);
+  }
+
+  const updateStreak = (habit) => {
+    if (!habit.completedDates || habit.completedDates.length === 0) {
+      habit.streak = 0;
+      return;
+    }
+    const dates = [...habit.completedDates].sort((a,b) => new Date(b) - new Date(a));
+    const todayStr = new Date().toISOString().split('T')[0];
+    let yesterdayD = new Date();
+    yesterdayD.setDate(yesterdayD.getDate() - 1);
+    const yesterdayStr = yesterdayD.toISOString().split('T')[0];
+    
+    let streak = 0;
+    let expectedDateStr = '';
+    
+    if (dates[0] === todayStr) {
+      streak = 1;
+      expectedDateStr = yesterdayStr;
+    } else if (dates[0] === yesterdayStr) {
+      streak = 1;
+      let d = new Date(yesterdayD);
+      d.setDate(d.getDate() - 1);
+      expectedDateStr = d.toISOString().split('T')[0];
+    } else {
+      habit.streak = 0;
+      return;
+    }
+    
+    for (let i = 1; i < dates.length; i++) {
+      if (dates[i] === expectedDateStr) {
+        streak++;
+        let d = new Date(expectedDateStr);
+        d.setDate(d.getDate() - 1);
+        expectedDateStr = d.toISOString().split('T')[0];
+      } else {
+        break;
+      }
+    }
+    habit.streak = streak;
   }
 
   // Getters
@@ -64,6 +105,8 @@ export const useHabitStore = defineStore("habit", () => {
       } else {
         habit.completedDates = habit.completedDates.filter(date => date !== today)
       }
+      
+      updateStreak(habit);
     }
   }
 
@@ -81,6 +124,10 @@ export const useHabitStore = defineStore("habit", () => {
     filter.value = newFilter
   }
 
+  const updateHabitsOrder = (newList) => {
+    habits.value = newList
+  }
+
   // Watch
   watch(habits, (newHabits) => {
     storageService.saveHabits(newHabits)
@@ -89,7 +136,7 @@ export const useHabitStore = defineStore("habit", () => {
   return {
     habits, filter,
     filteredHabits, totalCount, completedCount, progress,
-    addHabit, editHabit, toggleHabit, removeHabit, clearAll, setFilter,
+    addHabit, editHabit, toggleHabit, removeHabit, clearAll, setFilter, updateHabitsOrder,
     loadHabits
   }
 })

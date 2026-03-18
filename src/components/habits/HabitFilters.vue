@@ -10,10 +10,10 @@ const { setFilter, clearAll } = habitStore
 <template>
   <div
     v-if="totalCount > 0"
-    class="flex flex-col sm:flex-row justify-between items-center bg-slate-50 p-2 rounded-lg gap-4 border border-slate-100"
+    class="flex flex-col sm:flex-row justify-between items-center bg-slate-50 dark:bg-slate-800/50 p-2 rounded-lg gap-4 border border-slate-100 dark:border-slate-800 transition-colors duration-200"
   >
     <!-- Filter Buttons -->
-    <div class="flex bg-white p-1 rounded-md shadow-sm border border-slate-200">
+    <div class="flex bg-white dark:bg-slate-700 p-1 rounded-md shadow-sm border border-slate-200 dark:border-slate-600 transition-colors duration-200">
       <button 
         v-for="f in ['all', 'active', 'completed']"
         :key="f"
@@ -22,7 +22,7 @@ const { setFilter, clearAll } = habitStore
         :class="[
           filter === f 
             ? 'bg-amber-500 text-white shadow-sm'
-            : 'text-slate-600 hover:text-amber-600'
+            : 'text-slate-600 dark:text-slate-200 hover:text-amber-600 dark:hover:text-amber-300'
         ]"
       >
         {{ f === 'all' ? 'All' : f === 'active' ? 'Active' : 'Completed' }}
@@ -31,7 +31,7 @@ const { setFilter, clearAll } = habitStore
 
     <!-- Action & Info -->
     <div class="flex items-center gap-4 text-sm">
-      <span class="text-slate-500 font-medium">
+      <span class="text-slate-500 dark:text-slate-400 font-medium">
         {{ completedCount }}/{{ totalCount }} completed
       </span>
       

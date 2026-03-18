@@ -74,7 +74,13 @@ const last30Days = ref(getLast30Days())
 </script>
 
 <template>
-  <div class="habit-item group">
+  <div>
+    <div class="habit-item group">
+    <!-- Drag Handle -->
+    <div v-if="!isEditing" class="drag-handle cursor-move opacity-0 group-hover:opacity-100 transition-opacity text-slate-400 hover:text-slate-600 dark:text-slate-500 dark:hover:text-slate-300 pr-2 -ml-2 flex items-center" title="Drag to reorder">
+      <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8h16M4 16h16"/></svg>
+    </div>
+
     <!-- Checkbox (Hidden while editing) -->
     <BaseCheckBox 
       v-if="!isEditing"
@@ -94,18 +100,25 @@ const last30Days = ref(getLast30Days())
         class="habit-input"
         :style="{ width: `${Math.max(editText.length + 1, 5)}ch`, maxWidth: '100%' }"
       />
-      <span
+      <div
         v-else
-        @dblclick="startEdit"
-        class="habit-text cursor-pointer"
-        :class="[
-          habit.done
-            ? 'line-through text-slate-400'
-            : 'text-slate-900 font-medium'
-        ]"  
+        class="habit-text flex items-center gap-2 w-fit max-w-full flex-wrap"
       >
-        {{ habit.text }}
-      </span>
+        <span
+          @dblclick="startEdit"
+          class="cursor-pointer"
+          :class="[
+            habit.done
+              ? 'line-through text-slate-400 dark:text-slate-500'
+              : 'text-slate-900 dark:text-slate-100 font-medium'
+          ]"  
+        >
+          {{ habit.text }}
+        </span>
+        <span v-if="habit.streak > 0" class="text-orange-500 dark:text-orange-400 text-xs font-bold inline-flex items-center justify-center shrink-0 w-max bg-orange-50 dark:bg-orange-900/40 px-2 py-0.5 rounded-full border border-orange-200 dark:border-orange-800 transition-colors" title="Current Streak">
+          🔥 {{ habit.streak }}
+        </span>
+      </div>
     </div>
 
     <!-- Actions -->
@@ -166,7 +179,7 @@ const last30Days = ref(getLast30Days())
         variant="primary" 
         @click="showCalendar = !showCalendar" 
         class="p-2 transition-opacity"
-        :class="[ showCalendar ? 'opacity-100 bg-slate-100' : 'opacity-0 group-hover:opacity-100' ]"
+        :class="[ showCalendar ? 'opacity-100 bg-slate-100 dark:bg-slate-700' : 'opacity-0 group-hover:opacity-100' ]"
         title="Habit Calendar"
       >
         <svg class="habit-icon" :class="{ 'text-sky-500': showCalendar }" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -177,10 +190,10 @@ const last30Days = ref(getLast30Days())
   </div>
 
   <!-- Calendar Activity Box -->
-  <div v-if="showCalendar" class="pl-4 pr-4 py-3 bg-slate-50 border border-t-0 border-slate-200 rounded-b-lg -mt-2 mb-2">
+  <div v-if="showCalendar" class="pl-4 pr-4 py-3 bg-slate-50 dark:bg-slate-800/50 border border-t-0 border-slate-200 dark:border-slate-700 rounded-b-lg -mt-2 mb-2 transition-colors duration-200">
     <div class="flex items-center justify-between mb-2">
-      <span class="text-xs font-semibold text-slate-500 uppercase tracking-wider">Last 30 Days</span>
-      <span class="text-xs text-slate-500 font-medium whitespace-nowrap">
+      <span class="text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Last 30 Days</span>
+      <span class="text-xs text-slate-500 dark:text-slate-400 font-medium whitespace-nowrap">
         {{ (habit.completedDates || []).length }} completions
       </span>
     </div>
@@ -191,8 +204,8 @@ const last30Days = ref(getLast30Days())
         class="w-6 h-6 rounded flex items-center justify-center text-[10px] font-medium transition-colors cursor-help"
         :class="[
           (habit.completedDates || []).includes(day.date)
-            ? 'bg-emerald-400 text-white hover:bg-emerald-500'
-            : 'bg-slate-200 text-slate-500 hover:bg-slate-300'
+            ? 'bg-emerald-400 dark:bg-emerald-500/80 text-white hover:bg-emerald-500 dark:hover:bg-emerald-500'
+            : 'bg-slate-200 dark:bg-slate-700 text-slate-500 dark:text-slate-400 hover:bg-slate-300 dark:hover:bg-slate-600'
         ]"
         :title="day.date"
       >
@@ -200,21 +213,22 @@ const last30Days = ref(getLast30Days())
       </div>
     </div>
   </div>
+  </div>
 </template>
 
 <style scoped>
 @reference "../../assets/main.css";
 
 .habit-item {
-  @apply flex items-center gap-3 p-4 rounded-lg bg-white border border-slate-200 hover:border-sky-400 hover:shadow-md transition-all duration-200;
+  @apply flex items-center gap-3 p-4 rounded-lg bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 hover:border-sky-400 dark:hover:border-sky-500 hover:shadow-md transition-all duration-200;
 }
 
 .habit-input {
-  @apply bg-slate-50 border-b-2 border-sky-500 outline-none px-2 py-1 text-sm font-medium text-slate-900 transition-all duration-200;
+  @apply bg-slate-50 dark:bg-slate-900 border-b-2 border-sky-500 outline-none px-2 py-1 text-sm font-medium text-slate-900 dark:text-slate-100 transition-all duration-200;
 }
 
 .habit-text {
-  @apply block text-sm transition-all duration-200;
+  @apply block text-sm transition-all duration-200 dark:text-slate-100;
 }
 
 .habit-action-button {

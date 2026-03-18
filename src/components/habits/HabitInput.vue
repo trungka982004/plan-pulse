@@ -40,6 +40,6 @@ const handleKeyDown = (e) => {
 @reference "../../assets/main.css";
 
 .input-field {
-  @apply bg-white border border-slate-200 rounded-lg px-4 py-3 outline-none focus:ring-2 focus:ring-amber-500 focus:border-transparent transition-all shadow-sm;
+  @apply bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg px-4 py-3 outline-none focus:ring-2 focus:ring-amber-500 focus:border-transparent transition-all shadow-sm text-slate-900 dark:text-slate-100;
 }
 </style>
