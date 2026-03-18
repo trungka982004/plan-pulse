@@ -12,13 +12,13 @@ const menuItems = [
 </script>
 
 <template>
-  <aside class="w-64 bg-white border-r border-slate-200 flex flex-col h-screen sticky top-0">
+  <aside class="w-64 bg-white dark:bg-slate-900 border-r border-slate-200 dark:border-slate-800 flex flex-col h-screen sticky top-0 transition-colors duration-300">
     <!-- Logo -->
-    <div class="p-6 border-b border-slate-100 flex items-center gap-3">
-      <div class="w-10 h-10 bg-indigo-600 rounded-xl flex items-center justify-center shadow-lg shadow-indigo-200">
+    <div class="p-6 border-b border-slate-100 dark:border-slate-800 flex items-center gap-3">
+      <div class="w-10 h-10 bg-indigo-600 rounded-xl flex items-center justify-center shadow-lg shadow-indigo-200 dark:shadow-none">
         <span class="text-white font-bold text-xl">T</span>
       </div>
-      <span class="font-bold text-xl text-slate-800 tracking-tight">Todo App</span>
+      <span class="font-bold text-xl text-slate-800 dark:text-slate-100 tracking-tight">Todo App</span>
     </div>
 
     <!-- Navigation -->
@@ -30,8 +30,8 @@ const menuItems = [
         class="flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 group"
         :class="[
           $route.path === item.path 
-            ? 'bg-indigo-50 text-indigo-600 font-semibold shadow-sm shadow-indigo-100/50' 
-            : 'text-slate-500 hover:bg-slate-50 hover:text-indigo-600'
+            ? 'bg-indigo-50 dark:bg-indigo-900/40 text-indigo-600 dark:text-indigo-400 font-semibold shadow-sm shadow-indigo-100/50 dark:shadow-none' 
+            : 'text-slate-500 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800 hover:text-indigo-600 dark:hover:text-indigo-400'
         ]"
       >
         <svg class="w-5 h-5 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -42,10 +42,10 @@ const menuItems = [
     </nav>
 
     <!-- App Info -->
-    <div class="p-4 border-t border-slate-100">
-      <div class="p-4 bg-slate-50 rounded-xl">
-        <p class="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-1">Version</p>
-        <p class="text-sm font-bold text-slate-600">v1.2.0-Alpha</p>
+    <div class="p-4 border-t border-slate-100 dark:border-slate-800">
+      <div class="p-4 bg-slate-50 dark:bg-slate-800/50 rounded-xl">
+        <p class="text-xs font-semibold text-slate-400 dark:text-slate-500 uppercase tracking-wider mb-1">Version</p>
+        <p class="text-sm font-bold text-slate-600 dark:text-slate-300">v1.2.0-Alpha</p>
       </div>
     </div>
   </aside>

@@ -1,5 +1,5 @@
 <script setup>
-import { ref, nextTick } from "vue"
+import { ref, nextTick, computed } from "vue"
 import { useGoalStore } from "../../stores/goalStore"
 import BaseButton from "../base/BaseButton.vue"
 import BaseCheckBox from "../base/BaseCheckBox.vue"
@@ -65,10 +65,28 @@ const handleAddMilestone = () => {
     newMilestoneText.value = ''
   }
 }
+
+const categoryClass = computed(() => {
+  const cat = props.goal.category || 'Personal';
+  const classes = {
+    Personal: 'bg-blue-100 text-blue-700 border-blue-200 dark:bg-blue-900/40 dark:text-blue-300 dark:border-blue-800',
+    Work: 'bg-orange-100 text-orange-700 border-orange-200 dark:bg-orange-900/40 dark:text-orange-300 dark:border-orange-800',
+    Health: 'bg-emerald-100 text-emerald-700 border-emerald-200 dark:bg-emerald-900/40 dark:text-emerald-300 dark:border-emerald-800',
+    Learning: 'bg-purple-100 text-purple-700 border-purple-200 dark:bg-purple-900/40 dark:text-purple-300 dark:border-purple-800',
+    Finance: 'bg-amber-100 text-amber-700 border-amber-200 dark:bg-amber-900/40 dark:text-amber-300 dark:border-amber-800'
+  }
+  return classes[cat] || classes['Personal']
+})
 </script>
 
 <template>
-  <div class="goal-item group">
+  <div>
+    <div class="goal-item group">
+    <!-- Drag Handle -->
+    <div v-if="!isEditing" class="drag-handle cursor-move opacity-0 group-hover:opacity-100 transition-opacity text-slate-400 hover:text-slate-600 dark:text-slate-500 dark:hover:text-slate-300 pr-2 -ml-2 flex items-center" title="Drag to reorder">
+      <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8h16M4 16h16"/></svg>
+    </div>
+
     <!-- Checkbox (Hidden while editing) -->
     <BaseCheckBox 
       v-if="!isEditing"
@@ -77,11 +95,12 @@ const handleAddMilestone = () => {
     />
 
     <!-- Todo Text / Edit Input -->
-    <div class="flex-1">
+    <div class="flex-1" :class="{ 'cursor-pointer': !isEditing }" @click="!isEditing && (showMilestones = !showMilestones)">
       <input
         v-if="isEditing"
         ref="inputRef"
         v-model="editText"
+        @click.stop
         @keyup.enter="saveEdit"
         @keyup.esc="cancelEdit"
         @blur="saveEdit"
@@ -91,14 +110,19 @@ const handleAddMilestone = () => {
       <div v-else class="flex flex-col gap-1">
         <span
           @dblclick="startEdit"
-          class="goal-text cursor-pointer"
+          class="goal-text"
           :class="[
             goal.done
               ? 'line-through text-slate-400'
               : 'text-slate-900 font-medium'
           ]"  
         >
-          {{ goal.text }}
+          <span class="flex items-center gap-2">
+            <span>{{ goal.text }}</span>
+            <span v-if="goal.category" class="text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full border transition-colors" :class="categoryClass">
+              {{ goal.category }}
+            </span>
+          </span>
         </span>
         <!-- Milestone Summary -->
         <span v-if="goal.milestones && goal.milestones.length > 0" class="text-xs text-slate-500 font-medium">
@@ -165,7 +189,7 @@ const handleAddMilestone = () => {
         variant="primary" 
         @click="showMilestones = !showMilestones" 
         class="p-2 transition-opacity"
-        :class="[ showMilestones ? 'opacity-100 bg-slate-100' : 'opacity-0 group-hover:opacity-100' ]"
+        :class="[ showMilestones ? 'opacity-100 bg-slate-100 dark:bg-slate-800' : 'opacity-0 group-hover:opacity-100' ]"
         title="Toggle Milestones"
       >
         <svg class="goal-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24" :class="{ 'rotate-180': showMilestones, 'transition-transform': true }">
@@ -176,7 +200,7 @@ const handleAddMilestone = () => {
   </div>
 
   <!-- Milestones Section Box -->
-  <div v-if="showMilestones" class="pl-12 pr-4 py-2 bg-slate-50 border border-t-0 border-slate-200 rounded-b-lg -mt-2 mb-2">
+  <div v-if="showMilestones" class="pl-12 pr-4 py-2 bg-slate-50 dark:bg-slate-800/50 border border-t-0 border-slate-200 dark:border-slate-700 rounded-b-lg -mt-2 mb-2">
     <div class="flex flex-col gap-2 pt-2">
       <!-- Milestone List -->
       <div 
@@ -191,7 +215,7 @@ const handleAddMilestone = () => {
         />
         <span 
           class="flex-1 text-sm pt-1"
-          :class="milestone.done ? 'line-through text-slate-400' : 'text-slate-700'"
+          :class="milestone.done ? 'line-through text-slate-400 dark:text-slate-500' : 'text-slate-700 dark:text-slate-200'"
         >
           {{ milestone.text }}
         </span>
@@ -213,10 +237,11 @@ const handleAddMilestone = () => {
           v-model="newMilestoneText"
           @keyup.enter="handleAddMilestone"
           placeholder="Add a new milestone..."
-          class="flex-1 bg-transparent border-b border-slate-300 focus:border-sky-500 outline-none text-sm text-slate-700 py-1"
+          class="flex-1 bg-transparent border-b border-slate-300 dark:border-slate-600 focus:border-sky-500 dark:focus:border-sky-400 outline-none text-sm text-slate-700 dark:text-slate-200 py-1 placeholder-slate-400 dark:placeholder-slate-500"
         />
       </div>
     </div>
+  </div>
   </div>
 </template>
 
@@ -224,15 +249,15 @@ const handleAddMilestone = () => {
 @reference "../../assets/main.css";
 
 .goal-item {
-  @apply flex items-center gap-3 p-4 rounded-lg bg-white border border-slate-200 hover:border-sky-400 hover:shadow-md transition-all duration-200;
+  @apply flex items-center gap-3 p-4 rounded-lg bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 hover:border-sky-400 dark:hover:border-sky-500 hover:shadow-md transition-all duration-200;
 }
 
 .goal-input {
-  @apply bg-slate-50 border-b-2 border-sky-500 outline-none px-2 py-1 text-sm font-medium text-slate-900 transition-all duration-200;
+  @apply bg-slate-50 dark:bg-slate-900 dark:text-white border-b-2 border-sky-500 outline-none px-2 py-1 text-sm font-medium transition-all duration-200;
 }
 
 .goal-text {
-  @apply block text-sm transition-all duration-200;
+  @apply block text-sm transition-all duration-200 dark:text-white;
 }
 
 .goal-action-button {

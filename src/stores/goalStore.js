@@ -28,12 +28,13 @@ export const useGoalStore = defineStore("goal", () => {
   })
 
   // Actions
-  const addGoal = (text) => {
+  const addGoal = (text, category = 'Personal') => {
     if(text.trim()) {
       goals.value.push({
         id: Date.now(),
         text: text,
         done: false,
+        category: category,
         milestones: [] // Task 2.1: Milestones
       })
     }
@@ -63,6 +64,10 @@ export const useGoalStore = defineStore("goal", () => {
 
   const setFilter = (newFilter) => {
     filter.value = newFilter
+  }
+
+  const updateGoalsOrder = (newList) => {
+    goals.value = newList
   }
 
   // Milestone Actions (Task 2.1)
@@ -113,7 +118,7 @@ export const useGoalStore = defineStore("goal", () => {
   return {
     goals, filter,
     filteredGoals, totalCount, completedCount, progress,
-    addGoal, editGoal, toggleGoal, removeGoal, clearAll, setFilter,
+    addGoal, editGoal, toggleGoal, removeGoal, clearAll, setFilter, updateGoalsOrder,
     addMilestone, editMilestone, toggleMilestone, removeMilestone,
     loadGoals
   }

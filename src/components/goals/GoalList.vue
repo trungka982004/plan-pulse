@@ -5,13 +5,26 @@ import GoalItem from "./GoalItem.vue"
 import GoalFilters from "./GoalFilters.vue"
 import BaseProgressBar from "../base/BaseProgressBar.vue"
 
-const goalStore = useGoalStore()
-const { filteredGoals, totalCount, progress } = storeToRefs(goalStore)
-
 const props = defineProps({
   limit: {
     type: Number,
     default: 0
+  }
+})
+
+import draggable from "vuedraggable"
+import { computed } from "vue"
+
+const goalStore = useGoalStore()
+const { filteredGoals, totalCount, progress, filter } = storeToRefs(goalStore)
+
+const draggableGoals = computed({
+  get: () => props.limit ? filteredGoals.value.slice(0, props.limit) : filteredGoals.value,
+  set: (val) => {
+    // Only allow drag update if we are not limited and viewing 'all'
+    if (!props.limit && filter.value === 'all') {
+      goalStore.updateGoalsOrder(val)
+    }
   }
 })
 </script>
@@ -26,25 +39,29 @@ const props = defineProps({
     />
     <GoalFilters v-if="!limit" />
     <!-- Goal Items List -->
-    <transition-group
-      v-if="filteredGoals.length > 0"
-      name="list"
-      tag="div"
+    <draggable
+      v-if="draggableGoals.length > 0"
+      v-model="draggableGoals"
+      item-key="id"
       class="space-y-3"
+      handle=".drag-handle"
+      ghost-class="opacity-50"
+      animation="200"
     >
-      <GoalItem
-        v-for="goal in (limit ? filteredGoals.slice(0, limit) : filteredGoals)"
-        :key="goal.id"
-        :goal="goal"
-      />
-    </transition-group>
+      <template #item="{element}">
+        <GoalItem
+          :key="element.id"
+          :goal="element"
+        />
+      </template>
+    </draggable>
 
     <!-- Empty State -->
     <div 
       v-else 
-      class="text-center py-12 bg-slate-50 rounded-xl border-2 border-dashed border-slate-200"
+      class="text-center py-12 bg-slate-50 dark:bg-slate-800/50 rounded-xl border-2 border-dashed border-slate-200 dark:border-slate-700 transition-colors duration-200"
     >
-      <p class="text-slate-500 font-medium">No goals found. Start by adding one above!</p>
+      <p class="text-slate-500 dark:text-slate-400 font-medium">No goals found. Start by adding one above!</p>
     </div>
   </div>
 </template>

@@ -36,11 +36,11 @@ Nâng cấp để ứng dụng thực sự trở thành công cụ phát triển
 
 ## Phase 3: UX Improvements
 Đánh bóng, cải thiện trải nghiệm người dùng (UX) và giao diện (UI).
-- [ ] **Task 3.1:** Viết logic hệ thống đếm chuỗi Habit (Streak counter) và hiển thị lên UI.
-- [ ] **Task 3.2:** Thêm bộ lọc & phân loại Mục tiêu (Goal Categories/Tags).
-- [ ] **Task 3.3:** Tích hợp tính năng **Drag & Drop** (Kéo thả sắp xếp nhiệm vụ hoặc đổi trạng thái milestone).
-- [ ] **Task 3.4:** Hoàn thiện chế độ **Dark/Light Mode** từ settingStore sẵn có.
-- [ ] **Task 3.5:** Tích hợp thư viện đồ thị mạnh mẽ (như `Chart.js` hoặc `ApexCharts`) vào module Analytics.
+- [x] **Task 3.1:** Viết logic hệ thống đếm chuỗi Habit (Streak counter) và hiển thị lên UI.
+- [x] **Task 3.2:** Thêm bộ lọc & phân loại Mục tiêu (Goal Categories/Tags).
+- [x] **Task 3.3:** Tích hợp tính năng **Drag & Drop** (Kéo thả sắp xếp nhiệm vụ hoặc đổi trạng thái milestone).
+- [x] **Task 3.4:** Hoàn thiện chế độ **Dark/Light Mode** từ settingStore sẵn có.
+- [x] **Task 3.5:** Tích hợp thư viện đồ thị mạnh mẽ (như `Chart.js` hoặc `ApexCharts`) vào module Analytics.
 
 ---
 

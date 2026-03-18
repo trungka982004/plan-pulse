@@ -8,8 +8,8 @@ import BaseCard from '../components/base/BaseCard.vue'
   <div class="habits-page">
     <BaseCard>
       <header class="mb-8">
-        <h1 class="text-2xl font-bold text-slate-800">Daily Habits</h1>
-        <p class="text-slate-500">Consistency is the key to success.</p>
+        <h1 class="text-2xl font-bold text-slate-800 dark:text-slate-100">Daily Habits</h1>
+        <p class="text-slate-500 dark:text-slate-400">Consistency is the key to success.</p>
       </header>
       
       <HabitInput />
