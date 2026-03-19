@@ -69,33 +69,29 @@ Focus on improving user experience.
 - Dark mode
 - Data visualization charts
 
-## Phase 4 — Optional Advanced Features
+## Phase 4 — Advanced Features & Backend (Supabase)
 
-These features are optional and can be added later.
+**Goal:** Move to a real backend and add intelligent assistants.
 
-- **AI Goal Coach**
-  AI can help users:
-  - Break large goals into smaller steps
-  - Suggest useful habits
-  - Provide productivity insights
-- **Gamification**
-  Gamify the self-improvement process.
-  Examples:
-    - Experience points
-    - Levels
-    - Achievement badges
-    - Example achievement: *30 Day Habit Streak*
+**Features:**
+- **Supabase Integration (BaaS)**
+  - Authentication (Google/Email).
+  - Real-time Database (PostgreSQL).
+  - Data persistence across devices.
+- **AI Goal Coach (Optional)**
+  - Toggle in **Settings** (Off by default).
+  - AI can help users:
+    - Break large goals into smaller steps.
+    - Suggest useful habits based on goals.
+    - Provide productivity insights.
 - **Advanced Analytics**
-  Provide deeper productivity insights:
-  - Productivity score
-  - Habit success rate
-  - Long-term progress trends
-- **Social Features**
-  Community-based motivation.
-  Examples:
-  - Share progress
-  - Friend challenges
-  - Public achievements
+  - Productivity Score.
+  - Long-term progress trends.
+  - Deep-dive into habit success rates.
+- **Smart Notifications**
+  - Web Push reminders.
+  - Milestones celebrations.
+  - Motivational prompts.
 
 ## Long-Term Vision
 
@@ -107,6 +103,7 @@ The application aims to evolve into a complete personal growth platform combinin
 
 Future versions may include:
 - AI productivity assistants
+- Gamification elements (XP, Levels, Badges)
 - Smart scheduling
 - Cross-device synchronization
 - Integration with calendar and health platforms

@@ -5,14 +5,14 @@ import { useRouter } from 'vue-router'
 
 const authStore = useAuthStore()
 const router = useRouter()
-const username = ref('')
+const email = ref('')
 const password = ref('')
 const error = ref('')
 
 const handleLogin = async () => {
   error.value = '' // Reset previous error
   
-  const success = await authStore.login(username.value, password.value)
+  const success = await authStore.login(email.value, password.value)
   
   if (success) {
     // Redirect to dashboard on successful login
@@ -43,11 +43,11 @@ const goToRegister = () => router.push('/register')
       
       <form @submit.prevent="handleLogin" class="space-y-4">
         <div>
-          <label class="block text-sm font-medium text-slate-700 mb-1">Username</label>
+          <label class="block text-sm font-medium text-slate-700 mb-1">Email</label>
           <input 
-            type="text" 
-            v-model="username" 
-            placeholder="Enter your username"
+            type="email" 
+            v-model="email" 
+            placeholder="Enter your email"
             class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all bg-slate-50 focus:bg-white"
             required
           >
@@ -70,9 +70,10 @@ const goToRegister = () => router.push('/register')
 
         <button 
           type="submit" 
-          class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-3 px-4 rounded-xl transition-colors shadow-md shadow-indigo-200 mt-2"
+          :disabled="authStore.loading"
+          class="w-full bg-indigo-600 hover:bg-indigo-700 disabled:bg-indigo-400 text-white font-semibold py-3 px-4 rounded-xl transition-colors shadow-md shadow-indigo-200 mt-2"
         >
-          Sign In
+          {{ authStore.loading ? 'Signing In...' : 'Sign In' }}
         </button>
       </form>
 

@@ -31,26 +31,31 @@ const routes = [
     path: "/goals",
     name: "goals",
     component: GoalsView,
+    meta: {requiresAuth: true}
   },
   {
     path: "/habits",
     name: "habits",
     component: HabitsView,
+    meta: {requiresAuth: true}
   },
   {
     path: "/journal",
     name: "journal",
     component: JournalView,
+    meta: {requiresAuth: true}
   },
   {
     path: "/analytics",
     name: "analytics",
     component: AnalyticsView,
+    meta: {requiresAuth: true}
   },
   {
     path: "/settings",
     name: "settings",
     component: SettingView,
+    meta: {requiresAuth: true}
   }
 ]
 

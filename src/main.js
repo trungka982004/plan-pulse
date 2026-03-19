@@ -5,9 +5,16 @@ import App from './App.vue'
 import router from './router'
 import './assets/main.css'
 
-const app = createApp(App)
+import { useAuthStore } from './stores/authStore'
 
-app.use(createPinia())
+const app = createApp(App)
+const pinia = createPinia()
+
+app.use(pinia)
 app.use(router)
 
-app.mount('#app')
+// Initialize session from Supabase
+const authStore = useAuthStore()
+authStore.init().then(() => {
+  app.mount('#app')
+})

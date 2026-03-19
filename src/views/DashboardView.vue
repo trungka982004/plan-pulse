@@ -7,22 +7,37 @@ import BaseCard from "../components/base/BaseCard.vue"
 import GoalList from "../components/goals/GoalList.vue"
 import HabitList from "../components/habits/HabitList.vue"
 
+import { useSettingStore } from "../stores/settingStore"
+import AICoachCard from "../components/dashboard/AICoachCard.vue"
+import { notificationService } from "../services/notificationService"
+
 const goalStore = useGoalStore()
 const habitStore = useHabitStore()
 const journalStore = useJournalStore()
+const settingStore = useSettingStore()
 
-onMounted(() => {
-  if (goalStore.loadGoals) goalStore.loadGoals()
-  if (habitStore.loadHabits) habitStore.loadHabits()
-  if (journalStore.loadJournals) journalStore.loadJournals()
+onMounted(async () => {
+  await Promise.all([
+    goalStore.fetchGoals(),
+    habitStore.fetchHabits(),
+    journalStore.fetchJournals()
+  ])
+  
+  // Kiểm tra và gửi thông báo nếu cần (dựa trên thói quen và mục tiêu chưa xong)
+  notificationService.checkAndNotify(goalStore.goals, habitStore.habits)
 })
 </script>
 
 <template>
   <div class="space-y-8">
-    <header>
-      <h1 class="text-3xl font-bold text-slate-800 dark:text-slate-100">Dashboard</h1>
-      <p class="text-slate-500 dark:text-slate-400">Track your progress and stay productive.</p>
+    <header class="space-y-6">
+      <div>
+        <h1 class="text-3xl font-bold text-slate-800 dark:text-slate-100">Dashboard</h1>
+        <p class="text-slate-500 dark:text-slate-400">Track your progress and stay productive.</p>
+      </div>
+      
+      <!-- AI Goal Coach -->
+      <AICoachCard v-if="settingStore.aiActive" />
     </header>
 
     <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
