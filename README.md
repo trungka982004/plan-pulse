@@ -31,8 +31,8 @@
 
 1.  Clone the repository:
     ```sh
-    git clone https://github.com/trungka982004/TODOAPP_VUEJS.git
-    cd TODOAPP_VUEJS
+    git clone https://github.com/trungka982004/plan-pulse.git
+    cd plan-pulse
     ```
 
 2.  Install dependencies:
