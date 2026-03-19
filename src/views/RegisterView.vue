@@ -5,24 +5,28 @@ import { useRouter } from 'vue-router'
 
 const authStore = useAuthStore()
 const router = useRouter()
-const username = ref('')
+const email = ref('')
 const password = ref('')
 const confirmPassword = ref('')
 const error = ref('')
+const successMessage = ref('')
 
 const handleRegister = async () => {
-  error.value = '' // Reset previous error
+  error.value = '' 
+  successMessage.value = ''
   
-  // Verify password match
   if (password.value !== confirmPassword.value) {
     error.value = 'Passwords do not match!'
     return
   }
 
-  const success = await authStore.register(username.value, password.value)
+  const success = await authStore.register(email.value, password.value)
   
   if (success) {
-    router.push('/login') // Redirect to login after successful registration
+    successMessage.value = 'Registration successful! Please check your email for confirmation (if enabled) or proceed to login.'
+    setTimeout(() => {
+      router.push('/login')
+    }, 3000)
   } else {
     error.value = authStore.error
   }
@@ -43,11 +47,11 @@ const goToLogin = () => router.push('/login')
       
       <form @submit.prevent="handleRegister" class="space-y-4">
         <div>
-          <label class="block text-sm font-medium text-slate-700 mb-1">Username</label>
+          <label class="block text-sm font-medium text-slate-700 mb-1">Email</label>
           <input 
-            type="text" 
-            v-model="username" 
-            placeholder="Choose a username"
+            type="email" 
+            v-model="email" 
+            placeholder="Enter your email"
             class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all bg-slate-50 focus:bg-white"
             required
           >
@@ -79,11 +83,16 @@ const goToLogin = () => router.push('/login')
           {{ error }}
         </div>
 
+        <div v-if="successMessage" class="bg-green-50 border border-green-200 text-green-600 text-sm p-3 rounded-xl text-center font-medium">
+          {{ successMessage }}
+        </div>
+
         <button 
           type="submit" 
-          class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-3 px-4 rounded-xl transition-colors shadow-md shadow-indigo-200 mt-2"
+          :disabled="authStore.loading"
+          class="w-full bg-indigo-600 hover:bg-indigo-700 disabled:bg-indigo-400 text-white font-semibold py-3 px-4 rounded-xl transition-colors shadow-md shadow-indigo-200 mt-2"
         >
-          Sign Up
+          {{ authStore.loading ? 'Creating Account...' : 'Sign Up' }}
         </button>
       </form>
 

@@ -5,35 +5,27 @@ This document describes the architecture of the Self-Improvement application.
 ## High Level Architecture
 
 ```text
-Frontend (Vue 3)
-        │
-        │ REST API
-        ▼
-Backend (Node.js)
-        │
-        ├ Auth Service
-        ├ Goal Service
-        ├ Habit Service
-        ├ Journal Service
-        └ Analytics Service
-        │
-        ▼
-Database (PostgreSQL)
+Frontend (Vue 3) <──────────┐
+        │                   │
+        │ Supabase Client   │ External AI API
+        ▼                   │ (OpenAI/Gemini)
+Supabase (BaaS)             │
+        │                   │
+        ├ Auth Service      │ (Only if active
+        ├ Database (Postgres)◀── in Settings)
+        ├ Storage (Assets)
+        └ Edge Functions
 ```
-
-Optional services:
-- Redis Cache
-- Notification Service
 
 ## Frontend Architecture
 
-The frontend is built using Vue 3 with Composition API.
+The frontend is built using Vue 3 with Composition API and connects directly to Supabase via `@supabase/supabase-js`.
 
 Main responsibilities:
-- UI rendering
-- State management
-- API communication
-- Client-side routing
+- UI rendering & State management (Pinia).
+- Direct communication with Supabase for Auth and Data.
+- AI Goal Coach integration logic (triggered based on User Settings).
+- Web Push notification handling via Service Workers.
 
 ### Frontend Folder Structure
 
@@ -41,10 +33,20 @@ Main responsibilities:
 src
 │
 ├ components
-│   ├ goals
-│   ├ habits
-│   ├ charts
+│   ├ goals / habits / journal
+│   ├ settings (AI Coach Toggle)
+│   └ analytics (Charts)
 │   └ common
+│
+├ stores
+│   ├ authStore.ts (Supabase Auth)
+│   ├ goalStore.ts / habitStore.ts
+│   └ settingStore.ts (AI Coach state)
+│
+├ services
+│   ├ supabase.ts (Client Init)
+│   ├ aiService.ts (OpenAI/Gemini)
+│   └ notificationService.ts
 │
 ├ views
 │   ├ DashboardView.vue
@@ -53,22 +55,8 @@ src
 │   ├ JournalView.vue
 │   └ SettingsView.vue
 │
-├ stores
-│   ├ authStore.ts
-│   ├ goalStore.ts
-│   ├ habitStore.ts
-│   ├ journalStore.ts
-│
-├ router
-│   └ index.ts
-│
-├ services
-│   ├ api.ts
-│   ├ goalService.ts
-│   ├ habitService.ts
-│
 ├ composables
-│
+├ router
 └ utils
 ```
 
@@ -94,31 +82,26 @@ goalStore
  └ updateGoal()
 ```
 
-## Backend Architecture
+## Backend (Supabase BaaS)
 
-Recommended backend structure:
+Instead of a custom Node.js server, the application uses **Supabase** as a Backend-as-a-Service:
 
-```text
-src
-│
-├ controllers
-│   ├ authController
-│   ├ goalController
-│   ├ habitController
-│
-├ services
-│   ├ goalService
-│   ├ habitService
-│
-├ models
-│   ├ user
-│   ├ goal
-│   ├ habit
-│
-├ routes
-│
-└ middlewares
-```
+- **Authentication**: Managed via Supabase Auth (supports Email/Password & Google OAuth).
+- **Database**: PostgreSQL with Row Level Security (RLS) to ensure data privacy.
+- **Direct CRUD**: The frontend interacts directly with the database using the Supabase client, eliminating the need for a separate API server for CRUD operations.
+- **Service Layer**: Components and stores use a unified Service Layer that wraps Supabase SDK calls.
+
+## AI Goal Coach Integration
+
+The AI Goal Coach is an optional feature that connects to external LLM APIs (OpenAI GPT-4 or Gemini 1.5 Pro).
+
+- **Activation**: Controlled by `settingStore` and a toggle in `SettingsView`.
+- **Default State**: Inactive (Silent).
+- **Functionality**:
+    - Analyzes existing Goals to suggest Milestones.
+    - Proposes new Habits based on defined Goals.
+    - Provides periodic productivity insights.
+- **Security**: API keys are stored in environment variables (for development) or handled via Supabase Edge Functions (for production) to avoid exposing keys on the client side.
 
 ## Database Design
 
@@ -189,24 +172,22 @@ mood
 created_at
 ```
 
-## API Design
+## Service Integration (Supabase Client)
+
+Instead of traditional REST API endpoints, the frontend utilizes the `@supabase/supabase-js` client for:
 
 ### Authentication
-- `POST /auth/register`
-- `POST /auth/login`
-- `GET /auth/me`
+- `supabase.auth.signUp()` / `supabase.auth.signInWithPassword()`
+- `supabase.auth.signInWithOAuth({ provider: 'google' })`
+- `supabase.auth.signOut()`
 
-### Goals
-- `GET    /goals`
-- `POST   /goals`
-- `PUT    /goals/:id`
-- `DELETE /goals/:id`
+### Database CRUD (Real-time & RLS)
+- `supabase.from('goals').select(*)`
+- `supabase.from('habits').insert(...)`
+- `supabase.from('milestones').update(...)`
+- All queries are automatically scoped to the logged-in user via **PostgreSQL RLS policies**.
 
-### Habits
-- `GET  /habits`
-- `POST /habits`
-- `POST /habits/:id/check`
-
-### Journal
-- `GET  /journal`
-- `POST /journal`
+### AI Goal Coach (Conditional)
+- Only if `settingsStore.aiCoachActive` is `true`:
+  - Calls `aiService.getGoalSuggestions()` or `aiService.analyzeProgress()`.
+  - These calls may target either an external API directly or a Supabase Edge Function.

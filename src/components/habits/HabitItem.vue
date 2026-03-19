@@ -9,13 +9,12 @@ const props = defineProps({
     type: Object,
     required: true,
     default: () => ({
-      id: 0,
-      text: '',
-      done: false
-    }),
-    validator: (value) => {
-      return typeof value.id === 'number' && typeof value.text === 'string' && typeof value.done === 'boolean'
-    }
+      id: '',
+      name: '',
+      done: false,
+      streak: 0,
+      completedDates: []
+    })
   }
 })
 
@@ -25,11 +24,11 @@ const { toggleHabit, editHabit, removeHabit } = habitStore
 // State for editing
 const isEditing = ref(false)
 const isSaving = ref(false)
-const editText = ref(props.habit.text)
+const editName = ref(props.habit.name)
 const inputRef = ref(null)
 
 const startEdit = async () => {
-  editText.value = props.habit.text
+  editName.value = props.habit.name
   isEditing.value = true
   // Focus input after DOM updates
   await nextTick()
@@ -40,8 +39,8 @@ const saveEdit = () => {
   if (isSaving.value) return;
   isSaving.value = true;
 
-  if (editText.value.trim() && editText.value !== props.habit.text) {
-    editHabit(props.habit.id, editText.value)
+  if (editName.value.trim() && editName.value !== props.habit.name) {
+    editHabit(props.habit.id, { name: editName.value })
   }
   isEditing.value = false;
 
@@ -49,7 +48,7 @@ const saveEdit = () => {
 }
 
 const cancelEdit = () => {
-  editText.value = props.habit.text
+  editName.value = props.habit.name
   isEditing.value = false
 }
 
@@ -93,12 +92,12 @@ const last30Days = ref(getLast30Days())
       <input
         v-if="isEditing"
         ref="inputRef"
-        v-model="editText"
+        v-model="editName"
         @keyup.enter="saveEdit"
         @keyup.esc="cancelEdit"
         @blur="saveEdit"
         class="habit-input"
-        :style="{ width: `${Math.max(editText.length + 1, 5)}ch`, maxWidth: '100%' }"
+        :style="{ width: `${Math.max(editName.length + 1, 5)}ch`, maxWidth: '100%' }"
       />
       <div
         v-else
@@ -113,7 +112,7 @@ const last30Days = ref(getLast30Days())
               : 'text-slate-900 dark:text-slate-100 font-medium'
           ]"  
         >
-          {{ habit.text }}
+          {{ habit.name }}
         </span>
         <span v-if="habit.streak > 0" class="text-orange-500 dark:text-orange-400 text-xs font-bold inline-flex items-center justify-center shrink-0 w-max bg-orange-50 dark:bg-orange-900/40 px-2 py-0.5 rounded-full border border-orange-200 dark:border-orange-800 transition-colors" title="Current Streak">
           🔥 {{ habit.streak }}

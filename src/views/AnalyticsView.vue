@@ -1,5 +1,5 @@
 <script setup>
-import { computed } from 'vue'
+import { computed, onMounted } from 'vue'
 import { useGoalStore } from '../stores/goalStore'
 import { useHabitStore } from '../stores/habitStore'
 import { useJournalStore } from '../stores/journalStore'
@@ -21,6 +21,14 @@ const goalStore = useGoalStore()
 const habitStore = useHabitStore()
 const journalStore = useJournalStore()
 
+onMounted(async () => {
+  await Promise.all([
+    goalStore.fetchGoals(),
+    habitStore.fetchHabits(),
+    journalStore.fetchJournals()
+  ])
+})
+
 // Stats
 const totalGoals = computed(() => goalStore.totalCount)
 const completedGoals = computed(() => goalStore.completedCount)
@@ -31,6 +39,12 @@ const completedHabits = computed(() => habitStore.completedCount)
 const habitProgress = computed(() => habitStore.progress)
 
 const totalEntries = computed(() => journalStore.recentEntries.length)
+
+// Productivity Score (40% Goals, 60% Habits)
+const productivityScore = computed(() => {
+  const score = (goalProgress.value * 0.4) + (habitProgress.value * 0.6)
+  return Math.round(score) || 0
+})
 
 // Goal Chart Data
 const goalChartData = computed(() => ({
@@ -104,10 +118,20 @@ const habitChartOptions = {
 <template>
   <div class="space-y-8">
     <!-- Header -->
-    <div class="flex items-end justify-between">
+    <div class="flex flex-col sm:flex-row sm:items-end justify-between gap-4">
       <div>
         <h1 class="text-3xl font-extrabold text-slate-900 dark:text-slate-100 tracking-tight">Analytics Overview</h1>
         <p class="text-slate-500 dark:text-slate-400 mt-1">Track your progress across all activities.</p>
+      </div>
+      
+      <div class="flex items-center gap-4 bg-gradient-to-r from-indigo-500 to-purple-600 px-6 py-3 rounded-2xl shadow-lg shadow-indigo-500/20 text-white">
+        <div class="flex flex-col text-right">
+          <span class="text-xs font-bold uppercase tracking-widest text-indigo-100">Productivity Score</span>
+          <span class="text-3xl font-black leading-none mt-1">{{ productivityScore }}<span class="text-lg text-indigo-200 opacity-80">/100</span></span>
+        </div>
+        <div class="w-12 h-12 rounded-full bg-white/20 flex items-center justify-center text-2xl backdrop-blur-md">
+          🔥
+        </div>
       </div>
     </div>
 

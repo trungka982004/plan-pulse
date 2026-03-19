@@ -9,27 +9,24 @@ const props = defineProps({
     type: Object,
     required: true,
     default: () => ({
-      id: 0,
-      text: '',
-      done: false
-    }),
-    validator: (value) => {
-      return typeof value.id === 'number' && typeof value.text === 'string' && typeof value.done === 'boolean'
-    }
+      id: '',
+      title: '',
+      status: 'pending'
+    })
   }
 })
 
 const goalStore = useGoalStore()
-const { toggleGoal, editGoal, removeGoal, addMilestone, editMilestone, toggleMilestone, removeMilestone } = goalStore
+const { toggleGoal, editGoal, removeGoal, addMilestone, toggleMilestone, removeMilestone } = goalStore
 
 // State for editing
 const isEditing = ref(false)
 const isSaving = ref(false)
-const editText = ref(props.goal.text)
+const editTitle = ref(props.goal.title)
 const inputRef = ref(null)
 
 const startEdit = async () => {
-  editText.value = props.goal.text
+  editTitle.value = props.goal.title
   isEditing.value = true
   // Focus input after DOM updates
   await nextTick()
@@ -41,8 +38,8 @@ const saveEdit = () => {
   if (isSaving.value) return; 
   isSaving.value = true;
   
-  if (editText.value.trim() && editText.value !== props.goal.text) {
-    editGoal(props.goal.id, editText.value)
+  if (editTitle.value.trim() && editTitle.value !== props.goal.title) {
+    editGoal(props.goal.id, { title: editTitle.value })
   }
   isEditing.value = false;
   
@@ -51,7 +48,7 @@ const saveEdit = () => {
 }
 
 const cancelEdit = () => {
-  editText.value = props.goal.text
+  editTitle.value = props.goal.title
   isEditing.value = false
 }
 
@@ -90,7 +87,7 @@ const categoryClass = computed(() => {
     <!-- Checkbox (Hidden while editing) -->
     <BaseCheckBox 
       v-if="!isEditing"
-      :checked="goal.done"
+      :checked="goal.status === 'completed'"
       @toggle="toggleGoal(goal.id)"
     />
 
@@ -99,26 +96,26 @@ const categoryClass = computed(() => {
       <input
         v-if="isEditing"
         ref="inputRef"
-        v-model="editText"
+        v-model="editTitle"
         @click.stop
         @keyup.enter="saveEdit"
         @keyup.esc="cancelEdit"
         @blur="saveEdit"
         class="goal-input"
-        :style="{ width: `${Math.max(editText.length + 1, 5)}ch`, maxWidth: '100%' }"
+        :style="{ width: `${Math.max(editTitle.length + 1, 5)}ch`, maxWidth: '100%' }"
       />
       <div v-else class="flex flex-col gap-1">
         <span
           @dblclick="startEdit"
           class="goal-text"
           :class="[
-            goal.done
+            goal.status === 'completed'
               ? 'line-through text-slate-400'
               : 'text-slate-900 font-medium'
           ]"  
         >
           <span class="flex items-center gap-2">
-            <span>{{ goal.text }}</span>
+            <span>{{ goal.title }}</span>
             <span v-if="goal.category" class="text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full border transition-colors" :class="categoryClass">
               {{ goal.category }}
             </span>
@@ -126,7 +123,7 @@ const categoryClass = computed(() => {
         </span>
         <!-- Milestone Summary -->
         <span v-if="goal.milestones && goal.milestones.length > 0" class="text-xs text-slate-500 font-medium">
-          Milestones: {{ goal.milestones.filter(m => m.done).length }} / {{ goal.milestones.length }}
+          Milestones: {{ goal.milestones.filter(m => m.status === 'completed').length }} / {{ goal.milestones.length }}
         </span>
       </div>
     </div>
@@ -209,15 +206,15 @@ const categoryClass = computed(() => {
         class="flex items-center gap-2 group/milestone"
       >
         <BaseCheckBox 
-          :checked="milestone.done"
+          :checked="milestone.status === 'completed'"
           @toggle="toggleMilestone(goal.id, milestone.id)"
           size="sm"
         />
         <span 
           class="flex-1 text-sm pt-1"
-          :class="milestone.done ? 'line-through text-slate-400 dark:text-slate-500' : 'text-slate-700 dark:text-slate-200'"
+          :class="milestone.status === 'completed' ? 'line-through text-slate-400 dark:text-slate-500' : 'text-slate-700 dark:text-slate-200'"
         >
-          {{ milestone.text }}
+          {{ milestone.title }}
         </span>
         <!-- Milestone Delete -->
         <button 

@@ -200,10 +200,10 @@ For detailed architecture and development guidelines, see:
 
 This application aims to become a complete personal growth system. Future versions may include:
 
-- AI-powered goal planning
-- Gamification elements
-- Social challenges
-- Advanced analytics
+- Cloud synchronization (via Supabase)
+- AI-powered **Goal Coach** (Optional feature)
+- Gamification elements (XP, Levels, Badges)
+- Advanced productivity analytics
 - Mobile app version
 
 ---

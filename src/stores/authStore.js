@@ -1,46 +1,77 @@
-import {defineStore} from 'pinia'
+import { defineStore } from 'pinia'
 import { authService } from '../services/authService'
+import { supabase } from '../services/supabase'
+import { migrationService } from '../services/migrationService'
 import router from '../router'
 
 export const useAuthStore = defineStore('auth', {
   state: () => ({
-    user: authService.getCurrentUser(), // Initialize user state from LocalStorage
+    user: null, 
     error: null,
+    loading: false,
   }),
   
   getters: {
-    // Returns true if user is logged in
     isAuthenticated: (state) => !!state.user, 
   },
   
   actions: {
-    async login(username, password) {
-      this.error = null;
+    // Check for existing session at startup
+    async init() {
+      this.loading = true;
       try {
-        const user = authService.login(username, password);
+        const { data: { user } } = await supabase.auth.getUser()
         this.user = user;
-        return true;
       } catch (err) {
-        this.error = err.message;
-        return false;
+        console.error('Auth initialization error:', err);
+      } finally {
+        this.loading = false;
       }
     },
-    
-    async register(username, password) {
+
+    async login(email, password) {
       this.error = null;
+      this.loading = true;
       try {
-        authService.register(username, password);
+        const user = await authService.login(email, password);
+        this.user = user;
+        
+        // Trigger migration if local data exists
+        if (user) {
+          await migrationService.migrateLocalStorageToSupabase(user.id);
+        }
+        
         return true;
       } catch (err) {
-        this.error = err.message;
+        this.error = err.message || 'Login failed';
         return false;
+      } finally {
+        this.loading = false;
       }
     },
     
-    logout() {
-     authService.logout();
-     this.user = null;
-     router.push('/login');
+    async register(email, password) {
+      this.error = null;
+      this.loading = true;
+      try {
+        await authService.register(email, password);
+        return true;
+      } catch (err) {
+        this.error = err.message || 'Registration failed';
+        return false;
+      } finally {
+        this.loading = false;
+      }
+    },
+    
+    async logout() {
+      try {
+        await authService.logout();
+        this.user = null;
+        router.push('/login');
+      } catch (err) {
+        console.error('Logout error:', err);
+      }
     }
   }
 });
