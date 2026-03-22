@@ -4,10 +4,13 @@ const CURRENT_USER_KEY = 'todo_app_current_user'
 
 export const authService = {
   // Register user
-  async register(email, password) {
+  async register(email, password, metadata = {}) {
     const { data, error } = await supabase.auth.signUp({
       email,
       password,
+      options: {
+        data: metadata
+      }
     })
     
     if (error) throw error

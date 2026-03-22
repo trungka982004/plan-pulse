@@ -28,8 +28,9 @@ const handleKeyDown = (e) => {
       <BaseButton 
         variant="primary"
         @click="addHabit(text)"
-        class="px-6 whitespace-nowrap hover:shadow-lg"
+        class="px-6 whitespace-nowrap"
       >
+        <span class="text-xl">+</span>
         Add Habit
       </BaseButton>
     </div>

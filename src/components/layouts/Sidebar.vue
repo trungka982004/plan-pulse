@@ -41,12 +41,5 @@ const menuItems = [
       </RouterLink>
     </nav>
 
-    <!-- App Info -->
-    <div class="p-4 border-t border-slate-100 dark:border-slate-800">
-      <div class="p-4 bg-slate-50 dark:bg-slate-800/50 rounded-xl">
-        <p class="text-xs font-semibold text-slate-400 dark:text-slate-500 uppercase tracking-wider mb-1">Version</p>
-        <p class="text-sm font-bold text-slate-600 dark:text-slate-300">v1.2.0-Alpha</p>
-      </div>
-    </div>
   </aside>
 </template>

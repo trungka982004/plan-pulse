@@ -41,8 +41,9 @@ const handleAdd = () => {
       <BaseButton 
         variant="primary"
         @click="handleAdd"
-        class="px-6 whitespace-nowrap hover:shadow-lg"
+        class="px-6 whitespace-nowrap"
       >
+        <span class="text-xl">+</span>
         Add Task
       </BaseButton>
     </div>

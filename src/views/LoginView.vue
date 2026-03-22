@@ -8,6 +8,11 @@ const router = useRouter()
 const email = ref('')
 const password = ref('')
 const error = ref('')
+const showPassword = ref(false)
+
+const togglePasswordVisibility = () => {
+  showPassword.value = !showPassword.value
+}
 
 const handleLogin = async () => {
   error.value = '' // Reset previous error
@@ -55,13 +60,22 @@ const goToRegister = () => router.push('/register')
         
         <div>
           <label class="block text-sm font-medium text-slate-700 mb-1">Password</label>
-          <input 
-            type="password" 
-            v-model="password" 
-            placeholder="Enter your password"
-            class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all bg-slate-50 focus:bg-white"
-            required
-          >
+          <div class="relative">
+            <input 
+              :type="showPassword ? 'text' : 'password'" 
+              v-model="password" 
+              placeholder="Enter your password"
+              class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all bg-slate-50 focus:bg-white pr-12"
+              required
+            >
+            <button 
+              type="button" 
+              @click="togglePasswordVisibility"
+              class="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 focus:outline-none"
+            >
+              {{ showPassword ? '🙈' : '👁️' }}
+            </button>
+          </div>
         </div>
 
         <div v-if="error" class="bg-red-50 border border-red-200 text-red-600 text-sm p-3 rounded-xl text-center font-medium animate-pulse">

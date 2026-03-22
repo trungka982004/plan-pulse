@@ -182,8 +182,9 @@ const getMoodIcon = (moodValue) => {
             variant="primary" 
             @click="addEntry" 
             :disabled="!currentEntry.trim() || isSubmitting"
-            class="px-6 py-2 shadow-sm disabled:opacity-50"
+            class="px-8 py-3"
           >
+            <span class="text-lg">💾</span>
             {{ isSubmitting ? 'Saving...' : 'Save Entry' }}
           </BaseButton>
         </div>

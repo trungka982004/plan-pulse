@@ -64,8 +64,14 @@ const router = createRouter({
   routes
 }) 
 
-router.beforeEach((to, from) => {
+router.beforeEach(async (to, from) => {
   const authStore = useAuthStore()
+  
+  // Wait for authStore to finish initializing if it hasn't yet
+  if (!authStore.initialized) {
+    await authStore.init()
+  }
+
   const isAuthenticated = authStore.isAuthenticated
   
   if (to.meta.requiresAuth && !isAuthenticated) {

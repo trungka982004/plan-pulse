@@ -16,12 +16,15 @@ export const useSettingStore = defineStore('setting', {
   getters: {
     userProfile: () => {
       const authStore = useAuthStore()
-      return authStore.user ? {
-        name: authStore.user.user_metadata?.full_name || authStore.user.email.split('@')[0],
-        email: authStore.user.email,
-        avatar: authStore.user.user_metadata?.avatar_url || `https://i.pravatar.cc/150?u=${authStore.user.id}`,
-        bio: 'Self-Improvement Journey'
-      } : {
+      if (authStore.profile) {
+        return {
+          name: authStore.profile.full_name || authStore.profile.email?.split('@')[0] || 'User',
+          email: authStore.profile.email,
+          avatar: authStore.profile.avatar_url || `https://i.pravatar.cc/150?u=${authStore.profile.id}`,
+          bio: authStore.profile.bio || 'Self-Improvement Journey'
+        }
+      }
+      return {
         name: 'Guest User',
         email: '',
         avatar: 'https://i.pravatar.cc/150?u=guest',

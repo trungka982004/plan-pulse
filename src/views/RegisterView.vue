@@ -6,10 +6,16 @@ import { useRouter } from 'vue-router'
 const authStore = useAuthStore()
 const router = useRouter()
 const email = ref('')
+const fullName = ref('')
 const password = ref('')
 const confirmPassword = ref('')
 const error = ref('')
 const successMessage = ref('')
+const showPasswordValue = ref(false)
+
+const togglePasswordVisibility = () => {
+  showPasswordValue.value = !showPasswordValue.value
+}
 
 const handleRegister = async () => {
   error.value = '' 
@@ -20,7 +26,7 @@ const handleRegister = async () => {
     return
   }
 
-  const success = await authStore.register(email.value, password.value)
+  const success = await authStore.register(email.value, password.value, fullName.value)
   
   if (success) {
     successMessage.value = 'Registration successful! Please check your email for confirmation (if enabled) or proceed to login.'
@@ -52,6 +58,17 @@ const goToLogin = () => router.push('/login')
       
       <form @submit.prevent="handleRegister" class="space-y-4">
         <div>
+          <label class="block text-sm font-medium text-slate-700 mb-1">Full Name</label>
+          <input 
+            type="text" 
+            v-model="fullName" 
+            placeholder="What should we call you?"
+            class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all bg-slate-50 focus:bg-white"
+            required
+          >
+        </div>
+        
+        <div>
           <label class="block text-sm font-medium text-slate-700 mb-1">Email</label>
           <input 
             type="email" 
@@ -64,24 +81,42 @@ const goToLogin = () => router.push('/login')
         
         <div>
           <label class="block text-sm font-medium text-slate-700 mb-1">Password</label>
-          <input 
-            type="password" 
-            v-model="password" 
-            placeholder="Create a password"
-            class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all bg-slate-50 focus:bg-white"
-            required
-          >
+          <div class="relative">
+            <input 
+              :type="showPasswordValue ? 'text' : 'password'" 
+              v-model="password" 
+              placeholder="Create a password"
+              class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all bg-slate-50 focus:bg-white pr-12"
+              required
+            >
+            <button 
+              type="button" 
+              @click="togglePasswordVisibility"
+              class="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 focus:outline-none"
+            >
+              {{ showPasswordValue ? '🙈' : '👁️' }}
+            </button>
+          </div>
         </div>
 
         <div>
           <label class="block text-sm font-medium text-slate-700 mb-1">Confirm Password</label>
-          <input 
-            type="password" 
-            v-model="confirmPassword" 
-            placeholder="Confirm your password"
-            class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all bg-slate-50 focus:bg-white"
-            required
-          >
+          <div class="relative">
+            <input 
+              :type="showPasswordValue ? 'text' : 'password'" 
+              v-model="confirmPassword" 
+              placeholder="Confirm your password"
+              class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all bg-slate-50 focus:bg-white pr-12"
+              required
+            >
+            <button 
+              type="button" 
+              @click="togglePasswordVisibility"
+              class="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 focus:outline-none"
+            >
+              {{ showPasswordValue ? '🙈' : '👁️' }}
+            </button>
+          </div>
         </div>
 
         <div v-if="error" class="bg-red-50 border border-red-200 text-red-600 text-sm p-3 rounded-xl text-center font-medium animate-pulse">
