@@ -9,7 +9,7 @@ export const useSettingStore = defineStore('setting', {
     aiCoachName: 'Antigravity AI',
     
     // System settings
-    darkMode: false,
+    darkMode: true,
     notificationsEnabled: true
   }),
   
