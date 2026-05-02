@@ -127,13 +127,12 @@ export const useGoalStore = defineStore("goal", () => {
     }
   }
 
-  const toggleMilestone = async (goalId, milestoneId) => {
+  const updateMilestoneStatus = async (goalId, milestoneId, newStatus) => {
     const goal = goals.value.find(g => g.id === goalId)
     if (!goal || !goal.milestones) return
     const milestone = goal.milestones.find(m => m.id === milestoneId)
     if (!milestone) return
 
-    const newStatus = milestone.status === 'completed' ? 'pending' : 'completed'
     try {
       const { error } = await supabase
         .from('milestones')
@@ -143,8 +142,18 @@ export const useGoalStore = defineStore("goal", () => {
       if (error) throw error
       milestone.status = newStatus
     } catch (err) {
-      console.error('Error toggling milestone:', err.message)
+      console.error('Error updating milestone status:', err.message)
     }
+  }
+
+  const toggleMilestone = async (goalId, milestoneId) => {
+    const goal = goals.value.find(g => g.id === goalId)
+    if (!goal || !goal.milestones) return
+    const milestone = goal.milestones.find(m => m.id === milestoneId)
+    if (!milestone) return
+
+    const newStatus = milestone.status === 'completed' ? 'pending' : 'completed'
+    await updateMilestoneStatus(goalId, milestoneId, newStatus)
   }
 
   const removeMilestone = async (goalId, milestoneId) => {
@@ -190,6 +199,6 @@ export const useGoalStore = defineStore("goal", () => {
     filteredGoals, totalCount, completedCount, progress,
     fetchGoals, addGoal, editGoal, toggleGoal, removeGoal, setFilter,
     clearAll,
-    addMilestone, toggleMilestone, removeMilestone
+    addMilestone, toggleMilestone, updateMilestoneStatus, removeMilestone
   }
 })

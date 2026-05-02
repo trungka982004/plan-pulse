@@ -3,6 +3,7 @@ import { ref, nextTick, computed } from "vue"
 import { useGoalStore } from "../../stores/goalStore"
 import BaseButton from "../base/BaseButton.vue"
 import BaseCheckBox from "../base/BaseCheckBox.vue"
+import GoalKanban from "./GoalKanban.vue"
 
 const props = defineProps({
   goal: {
@@ -197,46 +198,18 @@ const categoryClass = computed(() => {
   </div>
 
   <!-- Milestones Section Box -->
-  <div v-if="showMilestones" class="pl-12 pr-4 py-2 bg-neutral-50 dark:bg-neutral-800/50 border border-t-0 border-neutral-200 dark:border-neutral-700 rounded-b-lg -mt-2 mb-2">
-    <div class="flex flex-col gap-2 pt-2">
-      <!-- Milestone List -->
-      <div 
-        v-for="milestone in (goal.milestones || [])" 
-        :key="milestone.id"
-        class="flex items-center gap-2 group/milestone"
-      >
-        <BaseCheckBox 
-          :checked="milestone.status === 'completed'"
-          @toggle="toggleMilestone(goal.id, milestone.id)"
-          size="sm"
-        />
-        <span 
-          class="flex-1 text-sm pt-1"
-          :class="milestone.status === 'completed' ? 'line-through text-neutral-400 dark:text-neutral-500' : 'text-neutral-700 dark:text-neutral-200'"
-        >
-          {{ milestone.title }}
-        </span>
-        <!-- Milestone Delete -->
-        <button 
-          @click="removeMilestone(goal.id, milestone.id)"
-          class="text-red-400 hover:text-red-600 opacity-0 group-hover/milestone:opacity-100 transition-opacity p-1"
-        >
-          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
-          </svg>
-        </button>
-      </div>
+  <div v-if="showMilestones" class="px-4 py-2 bg-neutral-50 dark:bg-neutral-800/50 border border-t-0 border-neutral-200 dark:border-neutral-700 rounded-b-lg -mt-2 mb-2">
+    <GoalKanban :goal="goal" />
 
-      <!-- Add Milestone Input -->
-      <div class="flex items-center gap-2 mt-1">
-        <svg class="w-4 h-4 text-neutral-400 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
-        <input 
-          v-model="newMilestoneText"
-          @keyup.enter="handleAddMilestone"
-          placeholder="Add a new milestone..."
-          class="flex-1 bg-transparent border-b border-neutral-300 dark:border-neutral-600 focus:border-primary-500 dark:focus:border-primary-400 outline-none text-sm text-neutral-700 dark:text-neutral-200 py-1 placeholder-neutral-400 dark:placeholder-neutral-500"
-        />
-      </div>
+    <!-- Add Milestone Input -->
+    <div class="flex items-center gap-2 mt-4 px-2">
+      <svg class="w-4 h-4 text-neutral-400 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
+      <input 
+        v-model="newMilestoneText"
+        @keyup.enter="handleAddMilestone"
+        placeholder="Add a new milestone..."
+        class="flex-1 bg-transparent border-b border-neutral-300 dark:border-neutral-600 focus:border-primary-500 dark:focus:border-primary-400 outline-none text-sm text-neutral-700 dark:text-neutral-200 py-1 placeholder-neutral-400 dark:placeholder-neutral-500"
+      />
     </div>
   </div>
   </div>
