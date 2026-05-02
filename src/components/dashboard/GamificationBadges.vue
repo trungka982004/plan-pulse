@@ -58,49 +58,55 @@ const upcomingBadges = computed(() => {
 </script>
 
 <template>
-  <BaseCard class="space-y-4">
-    <div class="flex items-center justify-between">
-      <h2 class="text-xl font-bold text-neutral-800 dark:text-neutral-100 flex items-center gap-2">
-        <span>🏆</span> Achievements
-      </h2>
-      <span class="text-sm font-medium px-2 py-1 bg-neutral-100 dark:bg-neutral-800 rounded-full text-neutral-600 dark:text-neutral-300">
-        {{ badges.length }} Unlocked
-      </span>
-    </div>
+  <BaseCard class="relative overflow-hidden bg-gradient-to-br from-purple-600 to-indigo-500 border-none text-white shadow-lg shadow-purple-500/30">
+    <!-- Decorative background elements similar to Pomodoro -->
+    <div class="absolute top-0 left-0 -ml-8 -mt-8 w-32 h-32 rounded-full bg-white opacity-10 blur-2xl pointer-events-none"></div>
+    <div class="absolute bottom-0 right-0 -mr-8 -mb-8 w-24 h-24 rounded-full bg-black opacity-10 blur-xl pointer-events-none"></div>
 
-    <!-- Achieved Badges -->
-    <div v-if="badges.length > 0" class="grid grid-cols-2 sm:grid-cols-3 gap-3">
-      <div 
-        v-for="badge in badges" 
-        :key="badge.id"
-        class="flex flex-col items-center p-3 rounded-xl border border-neutral-100 dark:border-neutral-700 bg-white dark:bg-neutral-800 shadow-sm hover:shadow-md hover:scale-105 transition-all duration-300 text-center group"
-      >
-        <div :class="`w-12 h-12 rounded-full flex items-center justify-center text-2xl mb-2 transition-transform group-hover:rotate-12 ${badge.color} dark:bg-opacity-20`">
-          {{ badge.icon }}
-        </div>
-        <div class="font-bold text-sm text-neutral-800 dark:text-neutral-200">{{ badge.title }}</div>
-        <div class="text-[10px] text-neutral-500 dark:text-neutral-400 mt-1 leading-tight">{{ badge.description }}</div>
+    <div class="relative z-10 flex flex-col h-full">
+      <div class="flex items-center justify-between mb-4">
+        <h2 class="text-xl font-bold flex items-center gap-2">
+          <span>🏆</span> Achievements
+        </h2>
+        <span class="text-xs font-medium px-2.5 py-1 bg-white/20 rounded-full backdrop-blur-sm">
+          {{ badges.length }} Unlocked
+        </span>
       </div>
-    </div>
-    
-    <div v-else class="text-center py-6 text-neutral-400 text-sm">
-      <div class="text-3xl mb-2 opacity-50">🌱</div>
-      Complete goals and maintain streaks to unlock badges!
-    </div>
 
-    <!-- Locked / Upcoming Badges -->
-    <div v-if="upcomingBadges.length > 0" class="pt-4 border-t border-neutral-100 dark:border-neutral-800">
-      <h3 class="text-xs font-bold text-neutral-400 uppercase tracking-wider mb-3">Next Targets</h3>
-      <div class="flex flex-wrap gap-2">
+      <!-- Achieved Badges -->
+      <div v-if="badges.length > 0" class="grid grid-cols-2 sm:grid-cols-3 gap-3">
         <div 
-          v-for="(badge, index) in upcomingBadges" 
-          :key="index"
-          class="flex items-center gap-1.5 px-2.5 py-1.5 rounded bg-neutral-50 dark:bg-neutral-800/50 border border-neutral-200/50 dark:border-neutral-700/50 text-xs text-neutral-500 dark:text-neutral-400 grayscale opacity-70"
+          v-for="badge in badges" 
+          :key="badge.id"
+          class="flex flex-col items-center p-3 rounded-xl bg-white/10 hover:bg-white/20 border border-white/10 backdrop-blur-sm shadow-sm hover:shadow-md hover:scale-105 transition-all duration-300 text-center group"
         >
-          <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/></svg>
-          <span class="font-medium">{{ badge.title }}</span>
-          <span class="opacity-50 mx-0.5">•</span>
-          <span>{{ badge.req }}</span>
+          <div class="w-10 h-10 rounded-full flex items-center justify-center text-xl mb-2 transition-transform group-hover:rotate-12 bg-white/20">
+            {{ badge.icon }}
+          </div>
+          <div class="font-bold text-sm text-white">{{ badge.title }}</div>
+          <div class="text-[10px] text-white/70 mt-1 leading-tight">{{ badge.description }}</div>
+        </div>
+      </div>
+      
+      <div v-else class="text-center py-6 text-white/60 text-sm">
+        <div class="text-3xl mb-2 opacity-50">🌱</div>
+        Complete goals and maintain streaks to unlock badges!
+      </div>
+
+      <!-- Locked / Upcoming Badges -->
+      <div v-if="upcomingBadges.length > 0" class="pt-4 mt-auto border-t border-white/10">
+        <h3 class="text-xs font-bold text-white/50 uppercase tracking-wider mb-3">Next Targets</h3>
+        <div class="flex flex-wrap gap-2">
+          <div 
+            v-for="(badge, index) in upcomingBadges" 
+            :key="index"
+            class="flex items-center gap-1.5 px-2.5 py-1.5 rounded bg-black/10 border border-white/5 text-xs text-white/70"
+          >
+            <svg class="w-3.5 h-3.5 opacity-50" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/></svg>
+            <span class="font-medium">{{ badge.title }}</span>
+            <span class="opacity-30 mx-0.5">•</span>
+            <span>{{ badge.req }}</span>
+          </div>
         </div>
       </div>
     </div>

@@ -38,19 +38,15 @@ onMounted(async () => {
         <p class="text-neutral-500 dark:text-neutral-400">Track your progress and stay productive.</p>
       </div>
       
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <!-- AI Goal Coach -->
-        <AICoachCard v-if="settingStore.aiActive" class="h-full" />
-        
-        <!-- Pomodoro Timer -->
+      <!-- AI Goal Coach -->
+      <AICoachCard v-if="settingStore.aiActive" class="w-full" />
+      
+      <!-- Phase 2 & Phase 3 Features (Side by Side) -->
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
         <PomodoroTimer class="h-full" />
+        <GamificationBadges class="h-full" />
       </div>
     </header>
-
-    <!-- Gamification & Achievements Section -->
-    <section>
-      <GamificationBadges />
-    </section>
 
     <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
       <!-- Goals Overview -->
