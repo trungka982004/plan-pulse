@@ -64,6 +64,16 @@ const handleAddMilestone = () => {
   }
 }
 
+const shareGoal = () => {
+  const link = `${window.location.origin}/share/goal/${props.goal.id}`
+  navigator.clipboard.writeText(link).then(() => {
+    // In a real app we would use a toast notification here
+    alert('Share link copied to clipboard! Share it with your accountability partner.')
+  }).catch(err => {
+    console.error('Failed to copy: ', err)
+  })
+}
+
 const categoryClass = computed(() => {
   const cat = props.goal.category || 'Personal';
   const classes = {
@@ -181,6 +191,19 @@ const categoryClass = computed(() => {
         </BaseButton>
       </template>
       
+      <!-- Share Button -->
+      <BaseButton 
+        v-if="!isEditing"
+        variant="modify" 
+        @click="shareGoal" 
+        class="goal-action-button text-blue-500 hover:text-blue-600"
+        title="Share / Invite Partner"
+      >
+        <svg class="goal-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z"/>
+        </svg>
+      </BaseButton>
+
       <!-- Expand Milestones Button -->
       <BaseButton 
         v-if="!isEditing"

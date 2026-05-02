@@ -10,6 +10,7 @@ import HabitList from "../components/habits/HabitList.vue"
 import { useSettingStore } from "../stores/settingStore"
 import AICoachCard from "../components/dashboard/AICoachCard.vue"
 import PomodoroTimer from "../components/dashboard/PomodoroTimer.vue"
+import GamificationBadges from "../components/dashboard/GamificationBadges.vue"
 import { notificationService } from "../services/notificationService"
 
 const goalStore = useGoalStore()
@@ -45,6 +46,11 @@ onMounted(async () => {
         <PomodoroTimer class="h-full" />
       </div>
     </header>
+
+    <!-- Gamification & Achievements Section -->
+    <section>
+      <GamificationBadges />
+    </section>
 
     <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
       <!-- Goals Overview -->
