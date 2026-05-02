@@ -143,18 +143,22 @@ const toggleNotifications = async () => {
 </script>
 
 <template>
-  <div class="py-8 px-4 transition-colors duration-300">
-    <div class="max-w-2xl mx-auto">
-      <BaseCard>
-        <div class="space-y-8">
+  <div class="py-8 px-4 h-full settings-page">
+    <div class="max-w-2xl mx-auto h-full">
+      <BaseCard class="relative overflow-hidden bg-gradient-to-br from-indigo-500 to-purple-600 border-none text-white shadow-lg shadow-purple-500/30 settings-purple-container min-h-full">
+        <!-- Decorative background elements -->
+        <div class="absolute top-0 right-0 -mr-20 -mt-20 w-64 h-64 rounded-full bg-white opacity-10 blur-3xl pointer-events-none"></div>
+        <div class="absolute bottom-0 left-0 -ml-20 -mb-20 w-48 h-48 rounded-full bg-black opacity-10 blur-2xl pointer-events-none"></div>
+
+        <div class="relative z-10 space-y-8">
           <!-- Section Profile -->
           <section>
             <div class="flex items-center justify-between mb-6">
-              <h3 class="text-xs font-bold text-indigo-600 dark:text-indigo-300 uppercase tracking-widest">User Profile</h3>
+              <h3 class="text-xs font-bold uppercase tracking-widest text-white/80">User Profile</h3>
               <button 
                 @click="saveProfile" 
                 :disabled="authStore.loading"
-                class="text-xs font-bold bg-indigo-600 text-white px-4 py-2 rounded-xl hover:bg-indigo-700 transition-all shadow-md shadow-indigo-200 disabled:opacity-50"
+                class="text-xs font-bold bg-white/20 text-white px-4 py-2 rounded-xl hover:bg-white/30 transition-all border border-white/30 disabled:opacity-50"
               >
                 {{ authStore.loading ? 'Saving...' : 'Save Profile' }}
               </button>
@@ -164,27 +168,27 @@ const toggleNotifications = async () => {
               <!-- Avatar Column -->
               <div class="shrink-0 flex flex-col items-center gap-4">
                 <div class="relative group cursor-pointer" @click="showAvatarModal = true">
-                  <img :src="profileForm.avatar_url || store.userProfile.avatar" class="w-28 h-28 rounded-[2.5rem] border-4 border-white dark:border-neutral-800 shadow-2xl object-cover" />
+                  <img :src="profileForm.avatar_url || store.userProfile.avatar" class="w-28 h-28 rounded-[2.5rem] border-4 border-white/30 shadow-2xl object-cover" />
                   <div class="absolute inset-0 bg-black/40 rounded-[2.5rem] opacity-0 group-hover:opacity-100 transition-all flex items-center justify-center">
                     <span class="text-white text-xs font-bold tracking-wide">Change</span>
                   </div>
                 </div>
-                <span class="text-[10px] font-bold text-neutral-400 uppercase tracking-tighter">Click to change avatar</span>
+                <span class="text-[10px] font-bold text-white/60 uppercase tracking-tighter">Click to change avatar</span>
               </div>
 
               <!-- Info Column -->
               <div class="flex-1 space-y-5">
                 <!-- 1. Name -->
                 <div class="space-y-1.5">
-                  <label class="text-[11px] font-bold text-neutral-400 dark:text-neutral-500 uppercase tracking-wider ml-1">Full Name</label>
-                  <input v-model="profileForm.full_name" placeholder="John Doe" class="w-full px-4 py-3.5 rounded-2xl border border-neutral-200 dark:border-neutral-700 bg-white dark:bg-neutral-900 text-neutral-900 dark:text-neutral-100 outline-none focus:ring-4 focus:ring-indigo-100 dark:focus:ring-indigo-900/20 transition-all" />
+                  <label class="text-[11px] font-bold text-white/80 uppercase tracking-wider ml-1">Full Name</label>
+                  <input v-model="profileForm.full_name" placeholder="John Doe" class="w-full px-4 py-3.5 rounded-2xl border border-neutral-200 bg-white text-neutral-900 outline-none focus:ring-4 focus:ring-indigo-100 transition-all" />
                 </div>
 
                 <!-- 2. Email -->
                 <div class="space-y-1.5">
-                  <label class="text-[11px] font-bold text-neutral-400 dark:text-neutral-500 uppercase tracking-wider ml-1">Email (Locked)</label>
+                  <label class="text-[11px] font-bold text-white/80 uppercase tracking-wider ml-1">Email (Locked)</label>
                   <div class="relative">
-                    <input :value="profileForm.email" disabled class="w-full px-4 py-3.5 rounded-2xl border border-neutral-200 dark:border-neutral-700 bg-neutral-50 dark:bg-neutral-900 text-neutral-400 outline-none cursor-not-allowed" />
+                    <input :value="profileForm.email" disabled class="w-full px-4 py-3.5 rounded-2xl border border-neutral-200 bg-neutral-50 text-neutral-400 outline-none cursor-not-allowed" />
                     <span class="absolute right-4 top-1/2 -translate-y-1/2">🔒</span>
                   </div>
                 </div>
@@ -192,21 +196,21 @@ const toggleNotifications = async () => {
                 <!-- 3. Password -->
                 <div class="space-y-1.5">
                   <div class="flex items-center justify-between ml-1">
-                    <label class="text-[11px] font-bold text-neutral-400 dark:text-neutral-500 uppercase tracking-wider">Password</label>
-                    <button @click="showPasswordFields = !showPasswordFields" class="text-[10px] font-bold text-indigo-600 hover:text-indigo-700 uppercase tracking-tight">
+                    <label class="text-[11px] font-bold text-white/80 uppercase tracking-wider">Password</label>
+                    <button @click="showPasswordFields = !showPasswordFields" class="text-[10px] font-bold text-white hover:text-white/80 uppercase tracking-tight">
                       {{ showPasswordFields ? 'Cancel' : 'Change Password' }}
                     </button>
                   </div>
                   
                   <div v-if="!showPasswordFields" class="relative group">
-                    <input type="password" value="••••••••" disabled class="w-full px-4 py-3.5 rounded-2xl border border-neutral-100 dark:border-neutral-800 bg-neutral-50/50 dark:bg-neutral-900 text-neutral-300 outline-none" />
+                    <input type="password" value="••••••••" disabled class="w-full px-4 py-3.5 rounded-2xl border border-neutral-100 bg-neutral-50/50 text-neutral-300 outline-none cursor-not-allowed" />
                   </div>
                   
-                  <div v-else class="space-y-4 bg-indigo-50/50 dark:bg-indigo-900/10 p-4 rounded-2xl border border-indigo-100 dark:border-indigo-900/20 animate-in fade-in slide-in-from-top-2">
+                  <div v-else class="space-y-4 bg-indigo-50/50 p-4 rounded-2xl border border-indigo-100 animate-in fade-in slide-in-from-top-2">
                     <!-- Step 1: Verify Current Password -->
                     <div class="space-y-3">
                       <div class="space-y-2">
-                        <label class="text-[9px] font-bold text-indigo-400 uppercase ml-1">Current Password Required</label>
+                        <label class="text-[9px] font-bold text-white/80 uppercase ml-1">Current Password Required</label>
                         <div class="relative">
                           <input 
                             :type="showPassword ? 'text' : 'password'" 
@@ -215,17 +219,17 @@ const toggleNotifications = async () => {
                             autocomplete="off"
                             :disabled="isPasswordVerified"
                             :class="[
-                              passwordError ? 'border-red-300 ring-4 ring-red-100 dark:ring-red-900/20' : 'border-neutral-200 dark:border-neutral-700',
-                              isPasswordVerified ? 'bg-indigo-100/50 text-indigo-400 border-indigo-200' : 'bg-white dark:bg-neutral-900'
+                              passwordError ? 'border-red-300 ring-4 ring-red-100' : 'border-neutral-200',
+                              isPasswordVerified ? 'bg-indigo-100/50' : 'bg-white'
                             ]"
-                            class="w-full px-4 py-3 rounded-xl border text-neutral-900 dark:text-neutral-100 outline-none transition-all shadow-sm"
+                            class="w-full px-4 py-3 rounded-xl border outline-none transition-all shadow-sm"
                           />
-                          <button v-if="!isPasswordVerified" @click="togglePasswordVisibility" class="absolute right-3 top-1/2 -translate-y-1/2 text-neutral-400 hover:text-neutral-600">
+                          <button v-if="!isPasswordVerified" @click="togglePasswordVisibility" class="absolute right-3 top-1/2 -translate-y-1/2 text-white/60 hover:text-white">
                             {{ showPassword ? '🙈' : '👁️' }}
                           </button>
-                          <span v-if="isPasswordVerified" class="absolute right-3 top-1/2 -translate-y-1/2 text-indigo-500">✓</span>
+                          <span v-if="isPasswordVerified" class="absolute right-3 top-1/2 -translate-y-1/2 text-white">✓</span>
                         </div>
-                        <p v-if="passwordError" class="text-[10px] text-red-500 font-bold ml-1">{{ passwordError }}</p>
+                        <p v-if="passwordError" class="text-[10px] text-red-300 font-bold ml-1">{{ passwordError }}</p>
                       </div>
 
                       <button 
@@ -240,18 +244,18 @@ const toggleNotifications = async () => {
 
                     <!-- Step 2: New Password Unlocked -->
                     <div v-if="isPasswordVerified" class="space-y-3 animate-in slide-in-from-top-4 duration-300">
-                      <div class="h-px bg-indigo-100 dark:bg-indigo-900/40 my-1"></div>
+                      <div class="h-px bg-indigo-100 my-1"></div>
                       <div class="space-y-2">
-                        <label class="text-[9px] font-bold text-indigo-600 dark:text-indigo-400 uppercase ml-1">New Password</label>
+                        <label class="text-[9px] font-bold text-white/80 uppercase ml-1">New Password</label>
                         <div class="relative">
                           <input 
                             :type="showPassword ? 'text' : 'password'" 
                             v-model="newPassword" 
                             placeholder="Type new password" 
                             autocomplete="new-password"
-                            class="w-full px-4 py-3 rounded-xl border border-indigo-200 dark:border-indigo-800 bg-white dark:bg-neutral-900 text-neutral-900 dark:text-neutral-100 outline-none focus:ring-4 focus:ring-indigo-100 dark:focus:ring-indigo-900/20 transition-all shadow-sm"
+                            class="w-full px-4 py-3 rounded-xl border border-indigo-200 bg-white outline-none focus:ring-4 focus:ring-indigo-100 transition-all shadow-sm"
                           />
-                          <button @click="togglePasswordVisibility" class="absolute right-3 top-1/2 -translate-y-1/2 text-neutral-400 hover:text-neutral-600">
+                          <button @click="togglePasswordVisibility" class="absolute right-3 top-1/2 -translate-y-1/2 text-white/60 hover:text-white">
                             {{ showPassword ? '🙈' : '👁️' }}
                           </button>
                         </div>
@@ -260,7 +264,7 @@ const toggleNotifications = async () => {
                       <button 
                         @click="changePassword" 
                         :disabled="!newPassword || verifyingPassword"
-                        class="w-full py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl text-xs font-bold transition-all shadow-lg shadow-indigo-100 dark:shadow-none"
+                        class="w-full py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl text-xs font-bold transition-all shadow-lg"
                       >
                         {{ verifyingPassword ? 'Saving Changes...' : 'Update Password' }}
                       </button>
@@ -270,50 +274,51 @@ const toggleNotifications = async () => {
 
                 <!-- 4. Short Bio -->
                 <div class="space-y-1.5">
-                  <label class="text-[11px] font-bold text-neutral-400 dark:text-neutral-500 uppercase tracking-wider ml-1">Short Bio</label>
-                  <textarea v-model="profileForm.bio" rows="3" placeholder="Tell us about your goals..." class="w-full px-4 py-3.5 rounded-2xl border border-neutral-200 dark:border-neutral-700 bg-white dark:bg-neutral-900 text-neutral-900 dark:text-neutral-100 outline-none focus:ring-4 focus:ring-indigo-100 dark:focus:ring-indigo-900/20 transition-all resize-none"></textarea>
+                  <label class="text-[11px] font-bold text-white/80 uppercase tracking-wider ml-1">Short Bio</label>
+                  <textarea v-model="profileForm.bio" rows="3" placeholder="Tell us about your goals..." class="w-full px-4 py-3.5 rounded-2xl border border-neutral-200 bg-white text-neutral-900 outline-none focus:ring-4 focus:ring-indigo-100 transition-all resize-none"></textarea>
                 </div>
               </div>
             </div>
           </section>
 
-          <hr class="border-neutral-100 dark:border-neutral-800" />
+          <hr class="border-white/20" />
 
-          <!-- Remaining sections unchanged (AI Goal Coach, etc.) -->
+          <!-- AI Goal Coach -->
           <section class="space-y-4">
-            <h3 class="text-xs font-bold text-indigo-600 dark:text-indigo-300 uppercase tracking-widest mb-4">AI Goal Coach</h3>
-            <div class="flex items-center justify-between p-5 bg-neutral-50 dark:bg-neutral-800/40 rounded-2xl border border-neutral-200/50 dark:border-neutral-700">
+            <h3 class="text-xs font-bold text-white/80 uppercase tracking-widest mb-4">AI Goal Coach</h3>
+            <div class="flex items-center justify-between p-5 bg-neutral-50 rounded-2xl border border-neutral-200/50">
                <div class="flex items-center gap-4">
-                 <div class="w-12 h-12 rounded-2xl bg-purple-100 dark:bg-purple-900/30 flex items-center justify-center text-2xl shadow-sm">🤖</div>
+                 <div class="w-12 h-12 rounded-2xl bg-purple-100 flex items-center justify-center text-2xl shadow-sm border border-white/20">🤖</div>
                  <div>
-                   <span class="font-bold block dark:text-neutral-100 text-sm">Enable AI Goal Coach</span>
-                   <span class="text-[10px] text-neutral-500 dark:text-neutral-400">Get personalized feedback and motivation</span>
+                   <span class="font-bold block text-white text-sm">Enable AI Goal Coach</span>
+                   <span class="text-[10px] text-white/60">Get personalized feedback and motivation</span>
                  </div>
                </div>
-               <button @click="store.toggleAIActive()" :class="store.aiActive ? 'bg-purple-600 shadow-purple-200' : 'bg-neutral-300 dark:bg-neutral-600'" class="w-14 h-7 rounded-full relative transition-all shadow-md">
-                 <div :class="store.aiActive ? 'translate-x-8' : 'translate-x-1'" class="w-5 h-5 bg-white rounded-full absolute top-1 transition-transform"></div>
+               <button @click="store.toggleAIActive()" :class="store.aiActive ? 'bg-indigo-600 border-white/50' : 'bg-neutral-300 border-transparent'" class="w-14 h-7 rounded-full relative transition-all shadow-md border">
+                 <div :class="store.aiActive ? 'translate-x-8' : 'translate-x-1'" class="w-5 h-5 bg-white rounded-full absolute top-1 transition-transform shadow-sm"></div>
                </button>
             </div>
           </section>
 
+          <!-- Notifications -->
           <section class="space-y-4">
-            <h3 class="text-xs font-bold text-indigo-600 dark:text-indigo-300 uppercase tracking-widest mb-4">Notifications</h3>
-            <div class="flex items-center justify-between p-5 bg-neutral-50 dark:bg-neutral-800/40 rounded-2xl border border-neutral-200/50 dark:border-neutral-700">
+            <h3 class="text-xs font-bold text-white/80 uppercase tracking-widest mb-4">Notifications</h3>
+            <div class="flex items-center justify-between p-5 bg-neutral-50 rounded-2xl border border-neutral-200/50">
                <div class="flex items-center gap-4">
-                 <div class="w-12 h-12 rounded-2xl bg-indigo-100 dark:bg-indigo-900/30 flex items-center justify-center text-2xl shadow-sm">🔔</div>
+                 <div class="w-12 h-12 rounded-2xl bg-indigo-100 flex items-center justify-center text-2xl shadow-sm border border-white/20">🔔</div>
                  <div>
-                   <span class="font-bold block dark:text-neutral-100 text-sm">Push Notifications</span>
-                   <span class="text-[10px] text-neutral-500 dark:text-neutral-400">Receive smart alerts about your goals and habits</span>
+                   <span class="font-bold block text-white text-sm">Push Notifications</span>
+                   <span class="text-[10px] text-white/60">Receive smart alerts about your goals and habits</span>
                  </div>
                </div>
-               <button @click="toggleNotifications" :class="store.notificationsEnabled ? 'bg-indigo-600 shadow-indigo-200' : 'bg-neutral-300 dark:bg-neutral-600'" class="w-14 h-7 rounded-full relative transition-all shadow-md">
-                 <div :class="store.notificationsEnabled ? 'translate-x-8' : 'translate-x-1'" class="w-5 h-5 bg-white rounded-full absolute top-1 transition-transform"></div>
+               <button @click="toggleNotifications" :class="store.notificationsEnabled ? 'bg-indigo-600 border-white/50' : 'bg-neutral-300 border-transparent'" class="w-14 h-7 rounded-full relative transition-all shadow-md border">
+                 <div :class="store.notificationsEnabled ? 'translate-x-8' : 'translate-x-1'" class="w-5 h-5 bg-white rounded-full absolute top-1 transition-transform shadow-sm"></div>
                </button>
             </div>
           </section>
 
           <div class="flex justify-end pt-2">
-            <button @click="authStore.logout()" class="px-8 py-3 bg-red-500/10 text-red-600 hover:bg-red-500 hover:text-white dark:bg-rose-500/20 dark:text-rose-300 dark:hover:bg-rose-500 dark:hover:text-white font-bold rounded-2xl transition-all shadow-sm">
+            <button @click="authStore.logout()" class="px-8 py-3 bg-red-500/10 text-red-200 hover:bg-red-500 hover:text-white font-bold rounded-2xl transition-all shadow-sm border border-red-400/20">
               Sign Out
             </button>
           </div>
@@ -322,30 +327,30 @@ const toggleNotifications = async () => {
     </div>
 
     <!-- Avatar Selection Modal -->
-    <div v-if="showAvatarModal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-neutral-900/40 backdrop-blur-sm animate-in fade-in duration-200">
-      <div class="bg-white dark:bg-neutral-900 w-full max-w-md rounded-3xl shadow-2xl p-8 space-y-6 animate-in zoom-in-95 duration-200">
+    <div v-if="showAvatarModal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-neutral-900/60 backdrop-blur-md animate-in fade-in duration-200">
+      <div class="bg-indigo-900/80 backdrop-blur-xl w-full max-w-md rounded-3xl shadow-2xl p-8 space-y-6 animate-in zoom-in-95 duration-200 border border-white/20 settings-purple-container">
         <div class="flex justify-between items-center mb-2">
-          <h2 class="text-xl font-bold dark:text-neutral-100">Update Avatar</h2>
-          <button @click="showAvatarModal = false" class="p-2 hover:bg-neutral-100 dark:hover:bg-neutral-800 rounded-full transition-colors">✕</button>
+          <h2 class="text-xl font-bold text-white">Update Avatar</h2>
+          <button @click="showAvatarModal = false" class="p-2 hover:bg-white/20 rounded-full transition-colors text-white">✕</button>
         </div>
         
         <div class="space-y-6">
           <!-- Option 1: File Upload -->
-          <div class="space-y-3 p-4 bg-neutral-50 dark:bg-neutral-800/50 rounded-2xl border border-neutral-100 dark:border-neutral-800">
-            <h4 class="text-xs font-bold text-neutral-400 uppercase tracking-wider">Local Upload</h4>
+          <div class="space-y-3 p-4 bg-white/10 rounded-2xl border border-white/20">
+            <h4 class="text-xs font-bold text-white/80 uppercase tracking-wider">Local Upload</h4>
             <div class="flex items-center gap-3">
-              <input type="file" @change="onFileChange" accept="image/*" class="text-xs text-neutral-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-xs file:font-semibold file:bg-indigo-50 file:text-indigo-600 hover:file:bg-indigo-100 dark:file:bg-indigo-900/30 dark:file:text-indigo-300" />
+              <input type="file" @change="onFileChange" accept="image/*" class="text-xs text-white/80 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-xs file:font-semibold file:bg-white/20 file:text-white hover:file:bg-white/30" />
             </div>
-            <button @click="uploadAndApplyAvatar" :disabled="!selectedFile || uploadingAvatar" class="w-full py-2.5 bg-indigo-600 text-white rounded-xl text-xs font-bold transition-all disabled:opacity-30">
+            <button @click="uploadAndApplyAvatar" :disabled="!selectedFile || uploadingAvatar" class="w-full py-2.5 bg-white/20 hover:bg-white/30 border border-white/30 text-white rounded-xl text-xs font-bold transition-all disabled:opacity-30">
               {{ uploadingAvatar ? 'Uploading...' : 'Upload & Use' }}
             </button>
           </div>
 
           <!-- Option 2: Image URL -->
-          <div class="space-y-3 p-4 bg-neutral-50 dark:bg-neutral-800/50 rounded-2xl border border-neutral-100 dark:border-neutral-800">
-            <h4 class="text-xs font-bold text-neutral-400 uppercase tracking-wider">Image URL</h4>
-            <input v-model="remoteAvatarUrl" placeholder="https://unsplash.com/..." class="w-full px-4 py-2.5 rounded-xl border border-neutral-200 dark:border-neutral-700 bg-white dark:bg-neutral-900 text-xs font-medium dark:text-neutral-100 outline-none focus:ring-2 focus:ring-indigo-500/20" />
-            <button @click="applyRemoteAvatar" :disabled="!remoteAvatarUrl" class="w-full py-2.5 bg-neutral-800 dark:bg-neutral-700 text-white rounded-xl text-xs font-bold transition-all disabled:opacity-30">
+          <div class="space-y-3 p-4 bg-white/10 rounded-2xl border border-white/20">
+            <h4 class="text-xs font-bold text-white/80 uppercase tracking-wider">Image URL</h4>
+            <input v-model="remoteAvatarUrl" placeholder="https://unsplash.com/..." class="w-full px-4 py-2.5 rounded-xl border border-white/30 bg-white/10 text-xs font-medium text-white outline-none focus:ring-2 focus:ring-white/50 placeholder:text-white/40" />
+            <button @click="applyRemoteAvatar" :disabled="!remoteAvatarUrl" class="w-full py-2.5 bg-white/20 hover:bg-white/30 border border-white/30 text-white rounded-xl text-xs font-bold transition-all disabled:opacity-30">
               Apply URL
             </button>
           </div>
@@ -355,6 +360,79 @@ const toggleNotifications = async () => {
   </div>
 </template>
 
-<style scoped>
-@reference "../assets/main.css";
+<style>
+/* Override styles for components inside the purple container */
+.settings-purple-container .text-neutral-500,
+.settings-purple-container .text-neutral-800,
+.settings-purple-container .text-neutral-900,
+.settings-purple-container .text-neutral-600,
+.settings-purple-container .text-neutral-400,
+.settings-purple-container .text-neutral-300,
+.settings-purple-container .text-neutral-700 {
+  color: #ffffff !important;
+}
+
+/* Glassmorphism for inputs, sections and cards */
+.settings-purple-container .bg-white,
+.settings-purple-container .bg-neutral-50,
+.settings-purple-container .bg-neutral-800\/40,
+.settings-purple-container .bg-indigo-50\/50,
+.settings-purple-container .bg-neutral-900,
+.settings-purple-container .bg-neutral-800,
+.settings-purple-container .bg-indigo-100\/50 {
+  background-color: rgba(255, 255, 255, 0.15) !important;
+  border-color: rgba(255, 255, 255, 0.3) !important;
+  backdrop-filter: blur(8px);
+}
+
+.settings-purple-container input, 
+.settings-purple-container textarea {
+  color: #ffffff !important;
+}
+
+.settings-purple-container input::placeholder, 
+.settings-purple-container textarea::placeholder {
+  color: rgba(255, 255, 255, 0.6) !important;
+}
+
+/* Border overrides */
+.settings-purple-container .border-neutral-100,
+.settings-purple-container .border-neutral-200,
+.settings-purple-container .border-neutral-700,
+.settings-purple-container .border-indigo-100,
+.settings-purple-container .border-indigo-200 {
+  border-color: rgba(255, 255, 255, 0.3) !important;
+}
+
+/* Specific buttons and backgrounds */
+.settings-purple-container .bg-indigo-600,
+.settings-purple-container .bg-purple-600 {
+  background-color: rgba(255, 255, 255, 0.3) !important;
+  color: #ffffff !important;
+}
+
+.settings-purple-container .bg-indigo-600:hover,
+.settings-purple-container .bg-purple-600:hover {
+  background-color: rgba(255, 255, 255, 0.4) !important;
+}
+
+.settings-purple-container .bg-neutral-300 {
+  background-color: rgba(255, 255, 255, 0.2) !important;
+}
+
+/* Icons box */
+.settings-purple-container .bg-purple-100,
+.settings-purple-container .bg-indigo-100 {
+  background-color: rgba(255, 255, 255, 0.2) !important;
+}
+
+/* Danger Button */
+.settings-purple-container .bg-red-500\/10 {
+  background-color: rgba(239, 68, 68, 0.2) !important;
+  color: #fecaca !important;
+}
+.settings-purple-container .bg-red-500\/10:hover {
+  background-color: rgba(239, 68, 68, 0.4) !important;
+  color: #ffffff !important;
+}
 </style>
